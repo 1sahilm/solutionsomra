@@ -1,0 +1,29 @@
+.Create-user{
+    margin-top:0;
+    width: 60px;
+    color: aqua;
+}
+
+.DataListHeading{
+    backgroundColor:"#ffcc99"
+
+}
+
+
+  .form-control-alternative{
+    color: #000 !important  ;
+    font-weight: 700;
+  }
+
+ 
+
+  .form-control{
+    width: 50px;
+    background-color: aqua;
+  }
+
+  
+  .md-form .mt-0 .search-box .bg-info.form-control{
+    background-color: bisque;
+
+  }

@@ -1,0 +1,1 @@
+export const SEND_DOC_ARRAY = "SEND_DOC_ARRAY"
