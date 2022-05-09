@@ -131,7 +131,7 @@ function UserData() {
   // for target Left==================
   useEffect(async () => {
     async function getData() {
-      axios.get(`/api/admin/agency/agency_data?page=${page}&limit=200`).then((response) => {
+      axios.get(`/api/admin/agency/details?page=${page}&limit=200`).then((response) => {
         const allusers = response.data.data
         // allusers.map((user)=>{
         //   user.status=false;
@@ -231,7 +231,7 @@ const userFilter=(users)=>{
 }
 const userss=users.filter(userFilter)
 
-
+const currentMonth=new Date().getMonth()+1
 
 function HandleActivate(userID){
 
@@ -298,6 +298,9 @@ function HandleActivate(userID){
         <th className="th-sm" style={{backgroundColor:"yellow"}}>Target Left
 
         </th>
+        <th className="th-sm" style={{backgroundColor:"yellow"}}>Target Left(this Month)
+
+</th>
      </tr>
   </thead>
   <tbody>
@@ -313,7 +316,13 @@ function HandleActivate(userID){
                  return item
                }
               })
-              test = test? test[test.length-1]:null;
+              // test = test? test[test.length-1]:null;
+              const lastMonth=test.filter(item=>(parseInt(item.date.slice(5,7))==currentMonth-1))
+              const Target_item=lastMonth? lastMonth[lastMonth.length-1]:null;
+              const thisMonth=test.filter(item=>(parseInt(item.date.slice(5,7))==currentMonth))
+              const Target_item_current_month=thisMonth? thisMonth[thisMonth.length-1]:null;
+              console.log(thisMonth.length)
+              console.log(lastMonth.length)
             
               
         return(
@@ -332,7 +341,10 @@ function HandleActivate(userID){
     
       
       <td>{user?.task}</td>
-      <td><b style={{color:"green"}}>{test?.target_left}</b></td>
+      <td><b style={{color:"green"}}>{Target_item?.target_left}</b></td>
+
+    <td>{Target_item_current_month?.target_left}</td> 
+     
      
       
      </tr>  

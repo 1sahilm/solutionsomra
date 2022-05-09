@@ -154,7 +154,7 @@ function CreatedData(props) {
   useEffect(() => {
     
     function getUsers() {
-      axios.get(`/api/admin/agency/agency_data?search=${users?.date}`).then((response) => {
+      axios.get(`/api/admin/agency/v1statusReport?search=${users?.date}`).then((response) => {
           
         setUsers(response.data.data);
         setServerPage(response.data.totalPages);

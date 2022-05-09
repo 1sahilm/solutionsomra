@@ -27,6 +27,10 @@ export default (async function handler(req, res) {
     days = 1;
   }
 
+  let today = new Date(); 
+  today.setHours(0,0,0,0);
+
+
   switch (method) {
     case "GET":
       try {
@@ -34,12 +38,19 @@ export default (async function handler(req, res) {
           //days * 60 * 60 * 24 * 1000
           {
             createdAt: {
-              $gte: new Date(new Date() - days* 60 * 60 * 24 * 1000),
+               $gte: days==1 ? today :new Date(new Date() - days * 60 * 60 *24 * 1000),
             },
+            // date: {
+            //   $gte: new Date(new Date().getDate() - days),
+            // },
+            //  date: {
+            //   $gte: new Date().toISOString().slice(0,10)
+            // },
            
           },
           {
             _id: 1,
+            
             name: 1,
             agentId: 1,
             brand_name: 1,
@@ -64,12 +75,13 @@ export default (async function handler(req, res) {
         ).lean();
 
        
-
+        if(products.length> 0 ){
         const excel = json2xls(products, {
           fields: [
             "_id",
             "name",
             "agentId",
+            
             "brand_name",
             "s_id",
             "SID1",
@@ -90,6 +102,8 @@ export default (async function handler(req, res) {
             "createdAt",
           ],
         });
+
+       
         await fs.writeFileSync("./public/manifest.xlsx", excel, "binary");
         const filePath = path.join(process.cwd(), "/public/manifest.xlsx");
         const manifestBuffer = fs.createReadStream(filePath);
@@ -123,7 +137,12 @@ export default (async function handler(req, res) {
           });
         });
 
-        // res.json({ message: "no docs found" });
+      }else{
+        res.json({ message: "no docs found" });
+
+      }
+        
+
       } catch (error) {
         console.log(error?.message);
         res.status(400).json({ success: false, error: error?.message });

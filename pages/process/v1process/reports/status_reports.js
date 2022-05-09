@@ -152,7 +152,7 @@ function StatusData() {
   useEffect(() => {
     
     function getUsers() {
-      axios.get(`/api/admin/agency/agency_data?search=${users?.date}`).then((response) => {
+      axios.get(`/api/admin/agency/v1statusReport?agentId=${session?.user?.id}`).then((response) => {
         console.log(count+1)
         setTotalCreatedReport(response.data.data.length)
           
@@ -166,7 +166,7 @@ function StatusData() {
     
   }, []);
 
-  console.log(users.length)
+  console.log(users)
   console.log(totalCreatedReport)
 
  

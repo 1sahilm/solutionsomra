@@ -46,6 +46,9 @@ import Layout from "../../components/Layout";
 function UserAttendence() {
     
     const router=useRouter();
+    const req=router.query
+
+
 
 
     const[session,loading] = useSession();
@@ -102,6 +105,8 @@ function UserAttendence() {
   const [modelUser,setModelUser] = useState({});
   const [modelTaskInput,setModelTaskInput] = useState("");
   const [data2,setData2]=useState([]);
+  const [s1data,setS1data]=useState([])
+  const currentMonth=new Date().getMonth()+1
 
   useEffect(()=>{
     setModelTaskInput(modelUser?.task)
@@ -126,12 +131,96 @@ function UserAttendence() {
   // Data fetch
 
 
-
+const {target_left,agentId}=req
 
   // for target Left==================
   useEffect(async () => {
+    async function getS1Data() {
+    await  axios.get(`/api/userForm/process/s1-process/oldcode?`).then((response) => {
+        const allusers = response.data.data
+        // allusers.map((user)=>{
+        //   user.status=false;
+        // })
+
+        // console.log(allusers)
+
+        setS1data(allusers);
+        setServerPage(response.data.totalPages);
+        setPage(page + 1);
+        
+      });
+    }
+   await getS1Data();
+  }, []);
+// console.log(s1data.map(item=>item._id[0]))
+const [presentUsers,setPresentUsers] = useState([])
+const [current_Month_presentUsers,setCurrent_Month_presentUsers]=useState([])
+console.log(s1data)
+
+const current_Month_s1Data=s1data.filter(item=>(parseInt(item._id[0].slice(5,7))==currentMonth)?item:'')
+const last_Month_s1Data=s1data.filter(item=>(parseInt(item._id[0].slice(5,7))==currentMonth-1)?item:'')
+
+
+// const byDate=s1data[0]._id[0].slice(5,7)
+// console.log(parseInt(byDate))
+console.log(currentMonth)
+console.log(current_Month_s1Data)
+console.log(last_Month_s1Data)
+
+
+// previous Month S1 Users Present Data
+useEffect(()=>{
+
+  const array =[]
+  last_Month_s1Data.map((item)=> {
+  const temp =  item.data;
+  array.push(...temp)
+
+const counts = {};
+array.forEach((x) => {
+  counts[x] = (counts[x] || 0) + 1;
+});
+ setPresentUsers(counts)
+//  console.log(counts)
+})},[last_Month_s1Data])
+
+// for current Month==============================
+
+useEffect(()=>{
+
+  const array =[]
+  current_Month_s1Data.map((item)=> {
+  const temp =  item.data;
+  array.push(...temp)
+
+const counts = {};
+array.forEach((x) => {
+  counts[x] = (counts[x] || 0) + 1;
+});
+setCurrent_Month_presentUsers(counts)
+//  console.log(counts)
+})},[current_Month_s1Data])
+
+// console.log([presentUsers].map(item=>Object.keys(item)))
+
+
+
+
+
+  // console.log([...new Set(s1data)])
+
+  // const filterData=s1data.filter((v,i,a)=>a.findIndex(v2=>['agentId','name','date'].every(k=>v2[k] ===v[k]))===i)
+  // console.log(filterData)
+
+
+ 
+ 
+
+  const test2=data2.map((test)=>test)
+  // s1 for attendence
+  useEffect(async () => {
     async function getData() {
-    await  axios.get(`/api/admin/agency/agency_data?page=${page}&limit=200`).then((response) => {
+    await  axios.get(`/api/admin/agency/details?`).then((response) => {
         const allusers = response.data.data
         // allusers.map((user)=>{
         //   user.status=false;
@@ -148,14 +237,7 @@ function UserAttendence() {
    await getData();
   }, []);
 
-//   console.log(data2)
- 
- 
 
-  const test2=data2.map((test)=>test)
-  // console.log(test2)
-  
-  // const left_target=data2.m
 
   
  //============================================================================
@@ -251,7 +333,7 @@ function HandleActivate(userID){
   )
 }
 const previousMonth=new Date().getMonth()
-const currentMonth=new Date().getMonth()+1
+// const currentMonth=new Date().getMonth()+1
 
 
 
@@ -292,18 +374,16 @@ const currentMonth=new Date().getMonth()+1
         <th className="th-sm">Employee email ID
 
         </th>
-        <th className="th-sm">Status
-
-</th>
-        <th className="th-sm">Monthly Target
-
-        </th>
-        <th className="th-sm" style={{backgroundColor:"yellow"}}>Target Left
-
-        </th>
+     
+       
+      
         
-        <th>LastMonth</th>
-        <th>This Month</th>
+        <th>V1LastMonth</th>
+        <th>V1This Month</th>
+        <th>S1 lastMonth</th>
+        <th>S1 currentMonth</th>
+        <th>LastMonth working days</th>
+        <th>Current Month working days</th>
 
         
        
@@ -317,19 +397,49 @@ const currentMonth=new Date().getMonth()+1
               // console.log(user?._id)
             //   console.log(user._id)
 
+            // for last Month s1 attendence
+          const amit1= Object.entries(presentUsers).map(item=>item)
+            // console.log(presentUsers)
+            const amit2=amit1.filter(item=>item[0]==user.name?item:0)
+            const amit3=amit2.map(item=>item[1])
+            // console.log(amit3[0])
+
+            // current Month attendence
+            const s1_currentData= Object.entries(current_Month_presentUsers).map(item=>item)
+           
+            const s1_currentData1=s1_currentData.filter(item=>item[0]==user.name?item:0)
+            const s1_currentData2=s1_currentData1.map(item=>item[1])
+
+            // s1 users Filter
+            const s1_users=Object.entries(presentUsers).filter(item=>{
+              if( item==user.name ){
+                const item2=Object.values(presentUsers)
+                return item2
+              }
+            })
+            
+              
+              
+              
+
               let test=data2.filter((item)=>{
                if( item.agentId==user._id ){
                  return item
                }
               })
-              const Target_item=test? test[test.length-1]:null;
-              console.log(test.map(item=>parseInt(item.date.slice(5,7))))
-              console.log(currentMonth-1)
+              // const 
+              
+              // console.log(test.map(item=>parseInt(item.date.slice(5,7))))
+              // console.log(currentMonth-1)
+              const test21=s1data.filter(item=>(parseInt(item._id[0].slice(5,7))==currentMonth)?item:'')
+              const test22=test21.map(it=>it.data)
 
               const lastMonth=test.filter(item=>(parseInt(item.date.slice(5,7))==currentMonth-1))
+              const Target_item=lastMonth? lastMonth[lastMonth.length-1]:null;
               const thisMonth=test.filter(item=>(parseInt(item.date.slice(5,7))==currentMonth))
-              console.log(thisMonth.length)
-              console.log(lastMonth.length)
+              const Target_item_current_month=thisMonth? thisMonth[thisMonth.length-1]:null;
+              // console.log(thisMonth.length)
+              // console.log(lastMonth.length)
             //   console.log(parseInt(test3.date)==currentMonth)
             //   console.log(test3)
            
@@ -342,18 +452,25 @@ const currentMonth=new Date().getMonth()+1
       <td>{user?.username}</td>
 
 
-      <td ><button onClick={()=>HandleActivate(user?._id) } >{user.status?<span style={{color:"green"}}>Activated</span>:<span style={{color:"red"}}>Activate</span>}</button></td>
-      
+      {/* <td ><button onClick={()=>HandleActivate(user?._id) } >{user.status?<span style={{color:"green"}}>Activated</span>:<span style={{color:"red"}}>Activate</span>}</button></td>
+       */}
 
    
       
      
     
       
-      <td>{user?.task}</td>
+      {/* <td>{user?.task}</td>
       <td><b style={{color:"green"}}>{Target_item?.target_left}</b></td>
+
+      <td>{Target_item_current_month?.target_left}</td> */}
       <td>{lastMonth.length}</td>
       <td>{thisMonth.length}</td>
+      {/* <td>{s1_users}</td> */}
+      <td>{amit3[0]?amit3[0]:0}</td>
+      <td>{s1_currentData2[0]?s1_currentData2[0]:0}</td>
+      <td>{lastMonth.length>amit3?lastMonth.length:amit3}</td>
+      <td>{thisMonth.length>s1_currentData2?thisMonth.length:s1_currentData2}</td>
      
       
      </tr>  

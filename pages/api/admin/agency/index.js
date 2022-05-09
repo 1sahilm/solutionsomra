@@ -52,8 +52,21 @@ export default async function handler (req, res) {
       const {name,agentId, inputList,inputList1,docId,total_catalog_created,cataloge_created,total_approval_done_today
         ,My_monthly_target_approved,target_left,My_monthly_target_Total_approved,total_number_product_created_today
         ,til_date,Month_Aproved_til_Date,total_number_product_approved_today, total_no_of_calls,total_bussiness_connected, total_docs_received_today, date, images, force_replace } = req.body;
-        const removDublicateDocid=inputList1[0].docId
+        // const removDublicateDocid=inputList1[0].docId
+        // const removDublicateDocid1=inputList1[1].docId
+        // const removDublicateDocid2=inputList1[2].docId
+        // const removDublicateDocid3=inputList1[3].docId
+        // const removDublicateDocid4=inputList1[4].docId
         // const removDublicateDocid=inputList1.map(id=>id.docId)
+        // switch(item){
+        //   case "removeDublicateDocid":removDublicateDocid=inputList1[0].docId
+        //   case "removDublicateDocid1":removDublicateDocid1=inputList1[1].docId
+        //   break;
+        //   case "removDublicateDocid2":removDublicateDocid2=inputList1[2].docId
+        //   break;
+        //   case "removDublicateDocid3":removDublicateDocid3=inputList1[3].docId
+        //   break
+        // }
      
         
       if (!total_no_of_calls || !total_bussiness_connected || !total_docs_received_today) {
@@ -61,16 +74,50 @@ export default async function handler (req, res) {
         return
       }else{
         // const autocomplete = await Product.findOne({ date:date,agentId:agentId });
-        
+    
         const autocomplete = await Product.findOne({date:date,agentId:agentId}) ;
-        const findByDocId=await Product.findOne({inputList1:{$elemMatch:{docId:removDublicateDocid}}})
-        console.log({"test2222":findByDocId})
+        const docid2= await Product.find({},{inputList1:1})
+
+        let docid2Array = []
+        docid2.map((item)=>{
+         return item?.inputList1?.map((i)=>{
+           docid2Array.push(i.docId)
+         })
+        })
+        
+        console.log({"Amitobject":docid2Array})
+        // const findByDocId=await Product.findOne({inputList1:{$elemMatch:{docId:removDublicateDocid}}})
+        let docid2ArrayLocal = []
+        inputList1.map((item)=>{
+        
+          docid2ArrayLocal.push(item.docId)
+         
+        })
+
+        const findByID=docid2ArrayLocal.filter((item)=> docid2Array.includes(item))
+
+        console.log({findByID})
+
+        // const findByDocId2=await Product.findOne({inputList1:{$elemMatch:{docId:removDublicateDocid2}}})
+        // const findByDocId3=await Product.findOne({inputList1:{$elemMatch:{docId:removDublicateDocid3}}})
+        // const findByDocId4=await Product.findOne({inputList1:{$elemMatch:{docId:removDublicateDocid4}}})
+        // console.log({"test2222":findByDocId})
         
       // autocomplete ? await Products.deleteOne({ _id: autocomplete.id }) : null;
       //|| (findByDocId&&total_approval_done_today=="Yes")
+      //findByDocid&&total_approval_done_today=="Yes"
 
-      if ((autocomplete && !force_replace)||(findByDocId&&total_approval_done_today=="Yes") ) {
-        res.json({ success: false, data: 'product already created' });
+      console.log(docid2ArrayLocal)
+
+      if ((autocomplete && !force_replace)||(findByID?.length> 0&&total_approval_done_today=="Yes" )) {
+        if(findByID?.length> 0&&total_approval_done_today=="Yes" ){
+         
+          return   res.json({ success: false, data: `duplicate docID Found => ${findByID.map((i)=> i+ " ")}`});
+        }
+        
+          res.json({ success: false, data: 'product already created' });
+
+        
       } else {
         force_replace ? await Product.deleteOne({ _id: autocomplete?.id }) : null;
         const data = [
