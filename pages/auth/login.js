@@ -80,12 +80,15 @@ function Login() {
         />
       </Head>
       <section className="hero is-fullheight">
+      
         <div className="hero-body">
           <div className="container has-text-centered">
+         
             <div className="column is-4 is-offset-4">
-              <div className="box">
+              <div className="box " >
                 <ToastContainer/>
-                <p className="subtitle is-4">Please login to proceed.</p>
+                
+                <p className="subtitle is-4 color-light">Please login to proceed.</p>
                 <br />
                 <form>
                   <div className="field">

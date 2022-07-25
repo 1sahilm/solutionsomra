@@ -1,12 +1,8 @@
-import nc from 'next-connect';
-import { isAdmin, isAuth } from '../../../../utils/auth';
-import User from '../../../../schema/User';
-import Task from '../../../../schema/Task';
-import Product from '../../../../schema/Product';
 import timestamp from 'time-stamp';
 
-
+import Product from '../../../../schema/Product';
 import dbConnect from '../../../../utils/DBconnect';
+
 const db=dbConnect()
 
 // const handler = nc();
@@ -75,7 +71,7 @@ export default async function handler (req, res) {
       }else{
         // const autocomplete = await Product.findOne({ date:date,agentId:agentId });
     
-        const autocomplete = await Product.findOne({date:date,agentId:agentId}) ;
+        const autocomplete = await Product.findOne({date:date.slice(0,10),agentId:agentId}) ;
         const docid2= await Product.find({},{inputList1:1})
 
         let docid2Array = []
@@ -85,7 +81,7 @@ export default async function handler (req, res) {
          })
         })
         
-        console.log({"Amitobject":docid2Array})
+        // console.log({"Amitobject":docid2Array})
         // const findByDocId=await Product.findOne({inputList1:{$elemMatch:{docId:removDublicateDocid}}})
         let docid2ArrayLocal = []
         inputList1.map((item)=>{

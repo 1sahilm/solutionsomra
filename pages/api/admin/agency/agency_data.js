@@ -1,10 +1,6 @@
-import nc from 'next-connect';
-import { isAdmin, isAuth } from '../../../../utils/auth';
-import User from '../../../../schema/User';
 import Product from '../../../../schema/Product';
-
-
 import dbConnect from '../../../../utils/DBconnect';
+
 const db=dbConnect()
 
 // const handler = nc();

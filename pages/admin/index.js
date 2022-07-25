@@ -1,66 +1,29 @@
-import React, { useState,useRef,useEffect } from "react";
-import axios from "axios";
-import { useRouter } from 'next/router'
+import React, {
+  useEffect,
+  useState,
+} from 'react';
 
-
-
-
+import axios from 'axios';
+import { getSession } from 'next-auth/client';
+import { useRouter } from 'next/router';
 // reactstrap components
 import {
-    Badge,
-    Card,
-    CardHeader,
-    CardFooter,
-    DropdownMenu,
-    DropdownItem,
-    UncontrolledDropdown,
-    DropdownToggle,
-    Media,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    Progress,
-    Table,
-  
-    Container,
-    Row,
-    UncontrolledTooltip,
-    CardBody,
-    FormGroup,
-  Form,
-  Input,
-  Col,
   Button,
-  Alert,
-  } from "reactstrap";
+  Card,
+  CardBody,
+  Container,
+  Table,
+} from 'reactstrap';
 
-
-import {useSession,getSession} from 'next-auth/client';
-import Layout from "../../components/Layout";
-
+import Layout from '../../components/Layout';
 
 function TaskList() {
     
     const router=useRouter();
 
 
-    const[session,loading] = useSession();
-  
-  // useEffect(()=>{
-  //   if(!session?.user?.isSuperAdmin){
-  //     router.push("/admin/dashboard")
  
-  //   }
-  // },[session])
-  const [count, setCount] = useState(0);
-//   const [toasterData, setToasterData] = useState({
-//     position: 'topEnd',
-//     status: 'Primary',
-//     duration: 5000,
-//     hasIcon: true,
-//     destroyByClick: true,
-//     preventDuplicates: false,
-//   });
+
 
   const [checkbox, setCheckbox] = useState({
     1: false,
@@ -83,12 +46,7 @@ function TaskList() {
   
  
   const [serverPage,setServerPage] = useState(1);
-  const [monthly_target_assign, setMonthly_target_assign] = useState('');
-  const [monthly_base_target_assign,setMonthly_base_target_assign]=useState('')
-  const [monthly_target_done, setMonthly_target_done] = useState('');
-  const [valid_date,setValid_date]=useState('');
-  const [category, setCategory] = useState('');
-  const [tasks,setTasks]= useState('');
+  
 
   const [showTaskModel , setShowTaskModel] = useState(false);
   const [modelUser,setModelUser] = useState({});
@@ -234,14 +192,7 @@ function TaskList() {
                       >
                         Add Target
                       </Button>
-                      {/* <Button
-                      fullWidth
-                      appearance="hero"
-                      status="success"
-                      style={{maxWidth:'45%'}}
-                      onClick={()=>router.push(`/admin/addTask?username=${user.username}`)}>
-                        Assign Task
-                      </Button> */}
+                      
                     </div>
                     </tr>
                     </tbody>

@@ -1,4 +1,4 @@
-import {SEND_DOC_ARRAY} from "./constants"
+import { SEND_DOC_ARRAY } from './constants';
 
 const initialState = {
     array:[],

@@ -125,6 +125,14 @@ function Sidebar() {
                   </a>
                 </Link>
                 </li>
+                <li>
+                <Link href="/admin/AddMessage">
+                  <a >
+                    <i className="fa fa-book"></i>
+                    <span>AddMessage</span>
+                  </a>
+                </Link>
+                </li>
               </ul>
             </div>
           </div>

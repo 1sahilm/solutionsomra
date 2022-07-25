@@ -1,9 +1,8 @@
-import admin from '../../../schema/admin';
 import { hash } from 'bcrypt';
+
+import admin from '../../../schema/admin';
 import dbConnect from '../../../utils/DBconnect';
 import { superAdmin } from '../../../utils/middleware';
-
-
 
 dbConnect();
 export default superAdmin(async function handler(req, res) {

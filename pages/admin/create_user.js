@@ -1,51 +1,35 @@
-import React, { useState,useRef,useEffect } from "react";
-import axios from "axios";
-import { useRouter } from 'next/router'
-import { useSession ,getSession} from "next-auth/client";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-import { ToastContainer, toast } from 'react-toastify';
-
-
-
-
-
-
+import axios from 'axios';
+import {
+  getSession,
+  useSession,
+} from 'next-auth/client';
+import { useRouter } from 'next/router';
+import {
+  toast,
+  ToastContainer,
+} from 'react-toastify';
 // reactstrap components
 import {
-    Badge,
-    Card,
-    CardHeader,
-    CardFooter,
-    DropdownMenu,
-    DropdownItem,
-    UncontrolledDropdown,
-    DropdownToggle,
-    Media,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    Progress,
-    Table,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
-  
-    Container,
-    Row,
-    UncontrolledTooltip,
-    CardBody,
-    FormGroup,
-  Form,
-  Input,
-  Col,
   Button,
-  Alert,
-  
-  } from "reactstrap";
-import Layout from "../../components/Layout";
+  Card,
+  CardBody,
+  Col,
+  Container,
+  Form,
+  FormGroup,
+  Input,
+  InputGroup,
+  InputGroupText,
+  Row,
+} from 'reactstrap';
 
-
-
+import Layout from '../../components/Layout';
 
 function Agency_User () {
   
@@ -71,17 +55,13 @@ function Agency_User () {
  const router=useRouter()
   const[session,loading] = useSession();
   
-  // useEffect(()=>{
-  //   if(!session?.user?.isSuperAdmin){
-  //     router.push("/admin/dashboard")
-  //   }
-  // },[session])
+
 
 
   useEffect(() => {
     if (password === confirmPassword) {
       setValid(true);
-      console.log(password, confirmPassword);
+     
     } else {
       setValid(false);
     }
@@ -91,7 +71,7 @@ function Agency_User () {
     setChecked(!checked);
   };
 
-  console.log(checked)
+
 
   const handleNewAdmin = async (e) => {
    e.preventDefault()

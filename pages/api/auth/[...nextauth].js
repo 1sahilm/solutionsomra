@@ -1,9 +1,9 @@
-import NextAuth from "next-auth";
-import Providers from "next-auth/providers";
-import dbConnect from "../../../utils/DBconnect";
-import Admin from "../../../schema/admin";
-import { compare } from "bcrypt";
+import { compare } from 'bcrypt';
+import NextAuth from 'next-auth';
+import Providers from 'next-auth/providers';
 
+import Admin from '../../../schema/admin';
+import dbConnect from '../../../utils/DBconnect';
 
 dbConnect();
 export default (req, res) => {

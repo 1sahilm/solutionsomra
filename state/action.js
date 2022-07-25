@@ -1,4 +1,4 @@
-import * as actionTypes from "./constants"
+import * as actionTypes from './constants';
 
 export const sendArray = (array) =>  async (dispatch) =>{
     console.log({array})

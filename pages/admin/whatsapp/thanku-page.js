@@ -1,21 +1,19 @@
-import React, { useState,useRef,useEffect } from "react";
-import axios from "axios";
-import { useRouter } from 'next/router'
-import {useSession,getSession} from "next-auth/client";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-
-
-
-
-
-// reactstrap components
+import axios from 'axios';
 import {
-    Container,
-  
-  } from "reactstrap";
+  getSession,
+  useSession,
+} from 'next-auth/client';
+import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
+// reactstrap components
+import { Container } from 'reactstrap';
 
-
-import { useSelector } from "react-redux";
 // core components
 
 
@@ -152,8 +150,6 @@ function Submited_data () {
 
   let string = "";
  
-
-
   array.map((item,index) =>{
     if (index === 0){
     string = string + `Total Catalouge Created: *${item.length}*  %0a`
@@ -167,7 +163,7 @@ function Submited_data () {
       string = string + i.docId + " " + i.bussiness_name +" "+ i.bussiness_number + " %0a";
       
     })
-    string = string + " %0a %0a %0a"
+    string = string + " %0a %0a %0a %0a %0a %0a"
 
   })
 
@@ -179,12 +175,9 @@ Total Business Connected: ${Total_Business_Connected} %0a %0a %0a
 
 
 *Total Number Document received today*: *${Total_document_Received_Today}* %0a %0a %0a
-
-
 ${string}
 
-
-Your Monthly Target: ${Monthly_Target_Approved} %0a  %0a %0a
+Your Monthly Target: ${Monthly_Target_Approved} %0a  %0a %0a %a
 
 Your numbers are left from Monthly Target: ${Monthly_Target_Approved-Month_Aproved_til_Date} %0a
 Total Number product created today: ${total_number_product_created_today} %0a

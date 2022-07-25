@@ -1,47 +1,20 @@
-import React, { useEffect, useState } from "react";
-// node.js library that concatenates classes (strings)
+import React from 'react';
 
-// javascipt plugin for creating charts
-
-// react plugin used to create charts
-
-import axios from "axios";
-
-// reactstrap components
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  NavItem,
-  NavLink,
-  Nav,
-  Progress,
-  Table,
-  Container,
-  Row,
-  Col,
-} from "reactstrap";
 // layout for this page
-
 // core components
+import { getSession } from 'next-auth/client';
+import { useRouter } from 'next/router';
+// reactstrap components
+import { Container } from 'reactstrap';
 
-import { useSession, getSession } from "next-auth/client";
-import { useRouter } from "next/router";
-import Layout from "../../components/Layout";
+import Layout from '../../components/Layout';
 
 const Dashboard = () => {
   const router = useRouter();
 
-  const [process, setProcess] = useState([]);
-  const [grandData,setGrandData]=useState([]);
+
   
  
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);
-  const [serverPage, setServerPage] = useState(1);
-  const [leftSid,setLeftSid]=useState([])
 
   //
   // const [session, loading] = useSession();
@@ -55,19 +28,7 @@ const Dashboard = () => {
     setChartExample1Data("data" + index);
   };
 
-  // useEffect(() => {
-  // async function getProcess() {
-    
-  //   await  axios.get(`/api/userForm/process/s1-process/oldcode`)
-  //   .then((response) => {
-  //     console.log(response)
-  //       setProcess(response.data.data);
-  //       setServerPage(response.data.totalPages);
-  //       setPage(page=>page+1);
-  //     });
-  //   }
-  //  getProcess();
-  // }, []);
+
 
   
 
@@ -165,9 +126,6 @@ const Dashboard = () => {
 
       <Container>
         <h1>Dashboard</h1>
-        {/* <h2 style={{background:"green",marginTop:"100px",color:"white"}}>Total Done:{total_sid_done?.length}</h2>
-        <h2 style={{background:"green",marginTop:"100px",color:"white"}}>Total Left:{100005-total_sid_done?.length}</h2> */}
-        {/* <h2 style={{background:"green",marginTop:"100px",color:"white"}}>Total Left:<span style={{background:"red"}}>{leftSid?.length}</span></h2> */}
         
         
 

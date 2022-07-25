@@ -1,54 +1,49 @@
-import React from "react";
-import { useState } from "react";
-import { useRef, useEffect } from "react";
-import axios from "axios";
-import { useSession,getSession } from "next-auth/client";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-import { useRouter } from "next/router";
-
-import { useDispatch } from "react-redux";
-
-import toastr from "toastr";
-
-
-
-
-import { sendArray} from "../../../state/action";
-import { Autocomplete, TextField, createFilterOptions } from "@mui/material";
-
-
+import axios from 'axios';
+import {
+  getSession,
+  useSession,
+} from 'next-auth/client';
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import {
+  toast,
+  ToastContainer,
+} from 'react-toastify';
 // reactstrap components
 import {
-  Card,
-  CardHeader,
-  Container,
-  Row,
-  CardBody,
-  FormGroup,
-  Form,
-  Input,
-  Col,
   Button,
-  select,
-} from "reactstrap";
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Container,
+  Form,
+  FormGroup,
+  Input,
+  Row,
+} from 'reactstrap';
 
+import {
+  Autocomplete,
+  createFilterOptions,
+  TextField,
+} from '@mui/material';
 
+import UserLayout from '../../../components/userLayout';
+import { sendArray } from '../../../state/action';
 
-// import {jsonData } from "../../../OmraSolutions-Data";
-import UserLayout from "../../../components/userLayout";
-import { height } from "@mui/system";
-import { toast, ToastContainer } from "react-toastify";
 // core components
 
 function Submission() {
   const dispatch = useDispatch();
 
   const [session, loading] = useSession();
-  // useEffect(() => {
-  //   if (!session) {
-  //     router.push("/auth/login");
-  //   }
-  // }, [session]);
 
   const [autoComplete, setAutoComplete] = useState("");
   const OPTIONS_LIMIT = 10;
@@ -61,7 +56,7 @@ function Submission() {
   //VARIABLE INITIALIZATION
 
   const [name, setName] = useState(session?.user?.name);
-  const [agentId,setAgentId]=useState(session?.user?.id)
+  const [agentId, setAgentId] = useState(session?.user?.id);
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [serverPage, setServerPage] = useState(1);
@@ -76,13 +71,6 @@ function Submission() {
   const [My_monthly_target_approved, setMy_monthly_target_approved] = useState(
     session?.user?.task
   );
-  console.log(session?.user?.name)
-  console.log(session?.user?.username)
-  console.log(session?.user._id)
-  console.log(session?.user.task)
-  console.log(session)
-  console.log(session?.user?.id)
-
 
   const [
     My_monthly_target_Total_approved,
@@ -91,15 +79,14 @@ function Submission() {
 
   const [My_monthly_base_target_approved, setMy_monthly_base_target_approved] =
     useState("");
-  const [target_left,setTarget_left]= useState('')
+  const [target_left, setTarget_left] = useState("");
 
   const [
     My_monthly_base_target_total_approved,
     setMy_monthly_base_target_total_approved,
   ] = useState("");
 
-  const [til_date, setTil_date] = useState('');
-  console.log(til_date)
+  const [til_date, setTil_date] = useState("");
 
   const [total_approval_done_today, setTotal_approval_done_today] =
     useState("No");
@@ -107,7 +94,7 @@ function Submission() {
     total_number_product_created_today,
     setTotal_number_product_created_today,
   ] = useState(0);
-  const [Month_Aproved_til_Date, setMonth_Aproved_til_Date] = useState('');
+  const [Month_Aproved_til_Date, setMonth_Aproved_til_Date] = useState("");
   const [
     total_number_product_approved_today,
     setTotal_number_product_approved_today,
@@ -119,43 +106,44 @@ function Submission() {
   const [valid_date, setValid_date] = useState("");
   const [category, setCategory] = useState("");
 
-  const [appr_status,setAppr_status]=useState('')
-  const [total_created,setTotal_created ]=useState(0)
-  const [total_approved,setTotal_approved]=useState(0)
+  const [appr_status, setAppr_status] = useState("");
+  const [total_created, setTotal_created] = useState(0);
+  const [total_approved, setTotal_approved] = useState(0);
   // const [jsonData,setJsonData]=useState([])
-  
 
   const [inputList1, setInputList1] = useState([
     {
-      
       docId: "",
       bussiness_name: "",
       bussiness_number: "",
-      appr_status: '',
+      appr_status: "",
     },
   ]);
   const [inputList, setInputList] = useState([
-    { docId: "", bussiness_name: "", bussiness_number: "" },
+    { docId: "", bussiness_name: "", bussiness_number: "", update_status: "" },
   ]);
 
-  const [imageList,setImageList]= useState([]);
+  const [imageList, setImageList] = useState([]);
+  const [createObjectURL, setCreateObjectURL] = useState([]);
 
   // const [inputList1, setInputList1] = useState([{docId1:"docid"},{bussiness_name1: "hellobaba"}]);
-
 
   const Total_Product_created_Today = inputList
     .map((item) => parseInt(item.bussiness_number))
     .reduce((prev, curr) => prev + curr, 0);
 
   // const Total_Product_approved_Today = inputList1?inputList1?.map((item) => parseInt(item?item.bussiness_number:0)).reduce((prev, curr) => prev + curr, 0):0;
-  const Total_Product_approved_Today = inputList1?.map((item)=>(item.bussiness_number)?parseInt(item.bussiness_number):0).reduce((prev, curr) => prev + curr, 0)
-  console.log(Total_Product_approved_Today)
+  const Total_Product_approved_Today = inputList1
+    ?.map((item) =>
+      item.bussiness_number ? parseInt(item.bussiness_number) : 0
+    )
+    .reduce((prev, curr) => prev + curr, 0);
+
   const today = new Date();
-  const yesterday = new Date(Date.parse(today) - 5*86400000);
+  const yesterday = new Date(Date.parse(today) - 5 * 86400000);
   let year = yesterday.getFullYear();
   let month = yesterday.getMonth() + 1;
   let dt = yesterday.getDate();
-  console.log(today.getMonth()+1)
 
   if (dt < 10) {
     dt = "0" + dt;
@@ -186,15 +174,29 @@ function Submission() {
     setInputList(list);
   };
 
-  console.log({inputList})
-  const handleImageInput = (e, index) => {
-    const { name, files} = e.target;
-    const list = [...imageList];
-    list[index] = files[0];
-    setImageList(list);
+  const handleImageInput = async (e, index) => {
+    const { name, files } = e.target;
+    const list = [...inputList1];
+    const preview = URL.createObjectURL(files[0]);
+    list[index]["preview"] = preview;
+
+    const cloudinaryGetUrl = async () => {
+      const data = new FormData();
+      data.append("image", files[0]);
+      try {
+        await axios(`/api/image/image`, {
+          method: "POST",
+          data: data,
+          "content-type": "multipart/form-data",
+        }).then(async (response) => {
+          list[index][name] = response.data[0];
+        });
+      } catch (err) {}
+    };
+
+    await cloudinaryGetUrl();
   };
 
-  console.log(imageList);
   const handleRemoveClick = (index) => {
     const list = [...inputList];
     list.splice(index, 1);
@@ -210,47 +212,41 @@ function Submission() {
 
   // Second event start
 
-  
+  const handleInputChange1 = (e, index) => {
+    const { name, value } = e.target;
 
-   
-    const handleInputChange1 = (e, index) => {
-      const { name, value } = e.target;
-  
-      const listsecond = [...inputList1];
-      listsecond[index][name] = value;
-      setInputList1(listsecond);
-    };
-    const handleSuggestions = (name, value) => {
-      const listsecond = [...inputList1];
-      console.log(listsecond);
-      listsecond[0][name] = value;
-      setInputList1(listsecond);
-    };
-  
-    // for file upload...............
-    const handleInputChangeimage = (e, index) => {
-      const { name, file } = e.target;
-      const listsecond = [...inputList1];
-      listsecond[index][name] = file;
-      setInputList1(listsecond);
-    };
-  
-    const handleRemoveClick1 = (index) => {
-      const listsecond = [...inputList1];
-      listsecond.splice(index, 1);
-      setInputList1(listsecond);
-    };
-  
-    const handleAddClick1 = () => {
-      setInputList1([
-        ...inputList1,
-        { docId: "", bussiness_name: "", bussiness_number: "" },
-      ]);
-    };
-  
+    const listsecond = [...inputList1];
+    listsecond[index][name] = value;
+    setInputList1(listsecond);
+  };
+  const handleSuggestions = (name, value) => {
+    const listsecond = [...inputList1];
 
-  
-  
+    listsecond[0][name] = value;
+    setInputList1(listsecond);
+  };
+
+  // for file upload...............
+  const handleInputChangeimage = (e, index) => {
+    const { name, file } = e.target;
+    const listsecond = [...inputList1];
+    listsecond[index][name] = file;
+    setInputList1(listsecond);
+  };
+
+  const handleRemoveClick1 = (index) => {
+    const listsecond = [...inputList1];
+    listsecond.splice(index, 1);
+    setInputList1(listsecond);
+  };
+
+  const handleAddClick1 = () => {
+    setInputList1([
+      ...inputList1,
+      { docId: "", bussiness_name: "", bussiness_number: "" },
+    ]);
+  };
+
   // Second event end
 
   const [isOpen, setIsOpen] = useState(false);
@@ -268,17 +264,17 @@ function Submission() {
   };
   //================================================ for Approved docs========>>>
 
-  const mouseOver = () => {
-    console.log("share");
-  };
+  // const mouseOver = () => {
+
+  // };
 
   //===============================================================================================================
 
   const toastrRef = useRef();
   const [count, setCount] = useState(0);
   const [toasterData, setToasterData] = useState({
-    position: 'topEnd',
-    status: 'Primary',
+    position: "topEnd",
+    status: "Primary",
     duration: 5000,
     hasIcon: true,
     destroyByClick: true,
@@ -300,51 +296,63 @@ function Submission() {
   //Next API For Beds start type
 
   const [size, setsize] = useState("");
-  //MAIN COLORS
-  //STRUCTURE 1
 
-  // useEffect(()=>{
-  //   console.log(session)
-  //   setName(session?.user?.username)
-  // },[session])
-
-  var approved_images=[]
+  var approved_images = [];
 
   async function addVarient(e) {
     e.preventDefault();
 
+    const findEmptyDocID = inputList.find((item) => item?.docId == "");
+    const findEmptyBusinessName = inputList.find(
+      (item) => item?.bussiness_name == ""
+    );
+    const findEmptyBusinessNumber = inputList.find(
+      (item) => item?.bussiness_number == ""
+    );
+    const findEmptyUpdateStatus = inputList.find(
+      (item) => item?.update_status == "--"
+    );
+    const findEmptyDocID1 = inputList1.find((item) => item?.docId == "");
+    const findEmptyBusinessName1 = inputList1.find(
+      (item) => item?.bussiness_name == ""
+    );
+    const findEmptyBusinessNumber1 = inputList1.find(
+      (item) => item?.bussiness_number == ""
+    );
 
-    const findEmptyDocID = inputList.find((item)=> item?.docId == "")
-    const findEmptyBusinessName = inputList.find((item)=> item?.bussiness_name == "")
-    const findEmptyDocID1 = inputList1.find((item)=> item?.docId == "")
-    const findEmptyBusinessName1 = inputList1.find((item)=> item?.bussiness_name == "")
-   
-    if((findEmptyDocID || findEmptyBusinessName)&&(total_approval_done_today=="No")){
-      toast("doc id or business name is required")
-      setInputList1[(findEmptyDocID1)]
-      
-      return
+    if (
+      (findEmptyDocID ||
+        findEmptyBusinessName ||
+        findEmptyBusinessNumber ||
+        findEmptyUpdateStatus) &&
+      (total_approval_done_today == "No" || total_approval_done_today == "Yes")
+    ) {
+      toast("doc id or business name is required");
+      // setInputList[(findEmptyDocID)]
+      setInputList[findEmptyDocID1];
+
+      return;
     }
-    else if(findEmptyDocID1&&total_approval_done_today=="Yes"){
-      toast("docid2 is required")
-      return
+    // if(((findEmptyDocID && findEmptyBusinessName)&&(findEmptyBusinessNumber && findEmptyUpdateStatus))&&(total_approval_done_today=="No"||total_approval_done_today=="Yes")){
+    //   toast("doc id or business name is required")
+    //   setInputList[(findEmptyDocID)]
+    //   // setInputList[(findEmptyDocID1)]
+
+    //   return
+    // }
+    else if (
+      (findEmptyDocID1 || findEmptyBusinessName1 || findEmptyBusinessNumber1) &&
+      total_approval_done_today == "Yes"
+    ) {
+      toast("docid2 is required");
+      setInputList1[findEmptyDocID1];
+      return;
     }
-   
-
- 
-
-   
 
     // if(total_approval_done_today=="No"){
     //   setInputList1("null")
 
     // }
-   
-
-
-
-    
-   
 
     dispatch(sendArray([inputList, inputList1]));
 
@@ -361,7 +369,7 @@ function Submission() {
       inputList1,
 
       Total_Product_created_Today,
-     
+
       total_product_till_date,
       total_product_appproved_monthly,
 
@@ -380,48 +388,34 @@ function Submission() {
       monthly_target_assign,
       monthly_target_done,
     };
-
-    //  router.push(`/admin/whatsapp/thanku-page?value=${val.name}&value2=${val.date}&value3=${val.total_no_of_calls}
-    //  &value4=${val.total_bussiness_connected}&value5=${val.total_docs_received_today}&value6=${val.total_catalog_created}&value7=${val.inputList.docId}
-    //  &value8=${val.inputList.bussiness_name}&value9=${val.total_approval_done_today}&value10=${val.My_monthly_target_approved}&value11=${val.My_monthly_target_Total_approved}
-    //  &value12=${val.My_monthly_base_target_approved}&value13=${val.My_monthly_base_target_total_approved}&value14=${val.til_date}
-    //  &value15=${val.total_number_product_created_today}&value1=${val.Month_Aproved_til_Date}&value16=${val.total_number_product_approved_today}`)
-
-  
-
-    // console.log(val)
-
-
-    //image 
+    //image
     const getApprovedStatus = async () => {
       const data = new FormData();
-      data.append('image', appr_status);
+      data.append("image", appr_status);
 
       try {
         await axios(`/api/image/image`, {
-          method: 'POST',
+          method: "POST",
           data: data,
-          'content-type': 'multipart/form-data',
+          "content-type": "multipart/form-data",
         }).then(async (response) => (approved_images = await response.data));
-      } catch (err) {
-        console.log(err.message);
-      }
+      } catch (err) {}
     };
 
     await getApprovedStatus();
 
     const sendData = async () => {
-      const approved_status=await approved_images;
+      const approved_status = await approved_images;
       const payload = {
         force_replace: checkbox[1],
         name: name,
-        agentId:agentId,
+        agentId: agentId,
         date: date,
         total_no_of_calls: total_no_of_calls,
         total_bussiness_connected: total_bussiness_connected,
         inputList: inputList,
         inputList1: inputList1,
-        images:approved_status[0],
+        images: approved_status[0],
 
         total_docs_received_today: total_docs_received_today,
         total_catalog_created: total_catalog_created,
@@ -429,946 +423,902 @@ function Submission() {
         total_approval_done_today: total_approval_done_today,
 
         My_monthly_target_approved: My_monthly_target_approved,
-        target_left:target_left,
-        My_monthly_target_Total_approved:
-          My_monthly_target_Total_approved,
-       
-        til_date: til_date,
-        Month_Aproved_til_Date:Month_Aproved_til_Date,
+        target_left: target_left,
+        My_monthly_target_Total_approved: My_monthly_target_Total_approved,
 
-        total_number_product_created_today:
-          total_number_product_created_today,
-        total_number_product_approved_today:total_number_product_approved_today ,
+        til_date: til_date,
+        Month_Aproved_til_Date: Month_Aproved_til_Date,
+
+        total_number_product_created_today: total_number_product_created_today,
+        total_number_product_approved_today:
+          total_number_product_approved_today,
         monthly_target_assign: monthly_target_assign,
         monthly_target_done: monthly_target_done,
         valid_date: valid_date,
-
-        
       };
-      console.log(payload)
 
       try {
         await axios
           .post("/api/admin/agency", payload)
           .then(async (response) => {
-            console.log(response)
             if (response.data.success) {
-              setCount(count + 1)
-              router.push(`/admin/whatsapp/thanku-page?value=${val.name}&value2=${val.date}&value3=${val.total_no_of_calls}
+              setCount(count + 1);
+              router.push(`/admin/whatsapp/thanku-page?value=${val.name}
+              &value2=${val.date}&value3=${val.total_no_of_calls}
               &value4=${val.total_bussiness_connected}&value5=${val.total_docs_received_today}&value6=${val.total_catalog_created}&value7=${val.inputList.docId}
               &value8=${val.total_approval_done_today}&value9=${val.inputList1}&value10=${val.My_monthly_target_approved}&value11=${val.total_product_appproved_monthly}
               &value12=${val.My_monthly_base_target_approved}&value13=${val.My_monthly_base_target_total_approved}&value14=${val.Total_Product_created_Today}&value15=${val.total_product_appr}
-              &value16=${val.total_product_appr}&value17=${val.Total_Product_approved_Today}`);
+              &value16=${val.total_product_appr}&value17=${val.Total_Product_approved_Today}
+              `);
             } else {
               setCount(count + 1);
-              toast(response.data.data)
-
-              
+              toast(response.data.data);
             }
           });
       } catch (err) {
         setCount(count + 1);
-        console.log(err.message)
+
         // toast(response.data.data)
-        toast("someThing going Wrong")
+        toast("someThing going Wrong");
       }
     };
 
     sendData();
-    
   }
-//Get V1Json Data from backend for docid1 and 2
-
-// useEffect(() => {
-//  async  function getDocId() {
-//   await  axios.get(`/api/admin/agency/v1jsondata?`).then((response) => {
-//       console.log(response);
-//       setJsonData(response.data.data);
-//       setServerPage(response.data.totalPages);
-//       setPage(page + 1);
-//     });
-//   }
-
-//   getDocId();
-// }, []);
-
-// console.log(jsonData)
-
-
-
-
-
-
-
-
   useEffect(() => {
-  async  function getUsers() {
-    await  axios.get(`/api/admin/agency/agency_data?agentId=${session?.user?.id}`).then((response) => {
-        console.log(response);
-        setUsers(response.data.data);
-        setServerPage(response.data.totalPages);
-        setPage(page + 1);
-      });
+    async function getUsers() {
+      await axios
+        .get(`/api/admin/agency/agency_data?agentId=${session?.user?.id}`)
+        .then((response) => {
+          setUsers(response.data.data);
+          setServerPage(response.data.totalPages);
+          setPage(page + 1);
+        });
     }
 
     getUsers();
-  }, []);
-
-  console.log(users)
-
- 
-
-  // const total_product_till_date=users.map(item=>(item.total_number_product_created_today)).reduce((prev,curr)=>prev+curr,0)
-
-  // console.log(data)
-  // console.log(users.map(item=>item.inputList.map(item1=>parseInt(item1.bussiness_number))).reduce((prev,curr)=>prev+curr),0);
-
-  // Total product created monthly
+  }, [page, session?.user?.id]);
 
   const total1 = users.filter((item) =>
-    item.agentId == session?.user?.id
-      ? item
-      : 0
+    item.agentId == session?.user?.id ? item : 0
   );
-  const total11=total1.filter((item)=>(parseInt(item.date.slice(5,7))==today.getMonth()+1))
-  console.log(total1)
-  const total_product_till_date = total11.map(item=>item.total_number_product_created_today).reduce((prev, curr) => prev + curr, 0);
+  const total11 = total1.filter(
+    (item) => parseInt(item.date.slice(5, 7)) == today.getMonth() + 1
+  );
 
-  // console.log(total_product_till_date)
-  // console.log(total_number_product_created_today)
+  const total_product_till_date = total11
+    .map((item) => item.total_number_product_created_today)
+    .reduce((prev, curr) => prev + curr, 0);
 
+  const total2 = users.filter((item) => {
+    if (item.agentId == session?.user?.id) {
+      return item;
+    }
+  });
 
-  
-
-  //Total product appproved monthly
-  
-
-  const total2 = users.filter((item) =>{
-  
-    // console.log(session?.user?.name)
-  if(item.agentId==session?.user?.id){
-    return item
-
-  }}
- );
- console.log(total2)
- const filterItem=total2.map((item)=>item.total_number_product_approved_today)
- console.log(filterItem)
-  
+  const filterItem = total2.map(
+    (item) => item.total_number_product_approved_today
+  );
 
   const total_product_appproved_monthly = filterItem.reduce(
     (prev, curr) => prev + curr,
     0
   );
-  console.log(total_product_appproved_monthly)
-  
-console.log(today.getMonth()+1)
 
-  // my monthly target approved
-  // const months=users.map(item=>item.date.slice(5,7))
-  // console.log(parseInt(months))
-  // console.log(parseInt(months)==today.getMonth()+1)
   const total3 = users.filter((item) =>
-    (item.agentId == session?.user?.id)
-    
-      // ? parseInt(item.My_monthly_target_Total_approved)
-      ?item
-    
-      : 0
-      
+    item.agentId == session?.user?.id ? item : 0
   );
-  const CurrentMonthData=total3.filter((item)=>(parseInt(item.date.slice(5,7))==today.getMonth()+1))
-  console.log(CurrentMonthData)
+  const CurrentMonthData = total3.filter(
+    (item) => parseInt(item.date.slice(5, 7)) == today.getMonth() + 1
+  );
 
+  const total_product_appr = CurrentMonthData.map(
+    (item) => item.total_number_product_approved_today
+  ).reduce((prev, curr) => prev + curr, 0);
 
-  const total_product_appr = CurrentMonthData.map(item=>item.total_number_product_approved_today).reduce((prev, curr) => prev + curr, 0);
-  console.log(total_product_appr)
-  
+  useEffect(() => {
+    setTarget_left(
+      parseInt(My_monthly_target_approved) - parseInt(total_product_appr)
+    );
 
- useEffect(()=>{
-   setTarget_left(parseInt(My_monthly_target_approved)-parseInt(total_product_appr))
-  //  setMonth_Aproved_til_Date(total_product_appr)
-  setMy_monthly_target_Total_approved(total_product_appr)
-  setTotal_number_product_approved_today(Total_Product_approved_Today)
-  setTotal_number_product_created_today(Total_Product_created_Today)
-  
-  //  setTil_date(total_product_till_date)
+    setMy_monthly_target_Total_approved(total_product_appr);
+    setTotal_number_product_approved_today(Total_Product_approved_Today);
+    setTotal_number_product_created_today(Total_Product_created_Today);
+  }, [
+    My_monthly_target_approved,
+    total_product_appr,
+    Total_Product_approved_Today,
+    Total_Product_created_Today,
+  ]);
 
- },[My_monthly_target_approved,total_product_appr,Total_Product_approved_Today]
+  useEffect(() => {
+    setMonth_Aproved_til_Date(total_product_appr);
+    setTil_date(total_product_till_date);
+  }, [total_product_appr, total_product_till_date]);
 
- )
+  const field_color = {
+    background: "#FDFDB4",
+  };
+  const [showInput, setShowInput] = useState(false);
 
- useEffect(()=>{
-  
-  setMonth_Aproved_til_Date(total_product_appr)
-  setTil_date(total_product_till_date)
-
-},[total_product_appr,total_product_till_date]
-
-)
-console.log(total_product_till_date)
-const field_color={
-  background:"#FDFDB4"
-}
-const [showInput,setShowInput] = useState(false)
-console.log(showInput)
-console.log(total_approval_done_today)
-  var approved_images=[]
-  const OpenInputField=(value)=>{
-    
-
-    if(value=="No"){
-      setShowInput(false)
-    
-    
-      
+  var approved_images = [];
+  const OpenInputField = (value) => {
+    if (value == "No") {
+      setShowInput(false);
+    } else {
+      setShowInput(true);
     }
-   
-    else{
-      setShowInput(true)
-     
-      
-      
-    }
-    setTotal_approval_done_today(value)
-    
-    
-    
-  }
+    setTotal_approval_done_today(value);
+  };
 
-  const [suggestions,setSuggestions] = useState([])
- 
-  const onSidChange = async (value) =>{
-    
-    await axios.get(`/api/admin/agency/v1jsondata?query=${value}`).then((response) => {
-      console.log(response)
-     
-      
-         setSuggestions(response.data.data)
-       
-     });
-   }
- 
+  const [suggestions, setSuggestions] = useState([]);
+
+  const onSidChange = async (value) => {
+    await axios
+      .get(`/api/admin/agency/v1jsondata?query=${value}`)
+      .then((response) => {
+        setSuggestions(response.data.data);
+      });
+  };
+
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
 
-    <UserLayout>
-      {/* <Header /> */}
-      <div className="bg-theme-clr pb-4 pt-4 pt-md-2" >
+      <UserLayout>
+        {/* <Header /> */}
+        <div className="bg-theme-clr pb-4 pt-4 pt-md-2">
+          <Container
+            className=""
+            style={{ backgroundColor: "#ffcc99", marginTop: "80px" }}
+          >
+            <div className="col text-center text-white">
+              <h1>Submission form</h1>
+            </div>
+          </Container>
+        </div>
 
+        <Container
+          className="user-container"
+          style={{
+            marginTop: "10px",
+            marginLeft: "-40px",
+            width: "100%",
+            maxWidth: "100%",
+          }}
+        >
+          <Row>
+            <div className="col">
+              <Card className="bg-secondary shadow">
+                <CardHeader
+                  className="border-0 "
+                  style={{ backgroundColor: "#edd8c4" }}
+                >
+                  <CardBody>
+                    <h3 className="mb-4 text-center">User Information</h3>
+                    <Container className="mt-4" fluid>
+                      <Row>
+                        <Form
+                          className="submission-form-field"
+                          onSubmit={addVarient}
+                        >
+                          <div className="">
+                            <Row>
+                              <Col lg="6">
+                                <FormGroup>
+                                  <label
+                                    className="form-control-label"
+                                    htmlFor="input-username"
+                                  >
+                                    Name:
+                                  </label>
+                                  <Input
+                                    className="form-control-alternative"
+                                    id="input-username"
+                                    placeholder="Enter Your Name"
+                                    type="text"
+                                    style={field_color}
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                  />
+                                </FormGroup>
+                              </Col>
+                              <Col lg="6">
+                                <FormGroup>
+                                  <label
+                                    className="form-control-label"
+                                    htmlFor="input-date"
+                                  >
+                                    Date:
+                                  </label>
+                                  <Input
+                                    className="form-control-alternative"
+                                    id="input-date"
+                                    type="date"
+                                    style={field_color}
+                                    min={dateString}
+                                    step="1"
+                                    max={current_date}
+                                    defaultValue={current_date}
+                                    onChange={(e) => setDate(e.target.value)}
+                                    required
+                                  />
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col lg="6">
+                                <FormGroup>
+                                  <label
+                                    className="form-control-label"
+                                    htmlFor="total_no_of_calls"
+                                  >
+                                    Total Number Of Calls:
+                                  </label>
+                                  <Input
+                                    className="form-control-alternative"
+                                    id="total_no_of_calls"
+                                    placeholder="5"
+                                    type="number"
+                                    style={field_color}
+                                    onChange={(e) =>
+                                      setTotal_no_of_calls(e.target.value)
+                                    }
+                                    required
+                                  />
+                                </FormGroup>
+                              </Col>
+                              <Col lg="6">
+                                <FormGroup>
+                                  <label
+                                    className="form-control-label"
+                                    htmlFor="Total_Business_Connected"
+                                  >
+                                    Total Business Connected :
+                                  </label>
+                                  <Input
+                                    className="form-control-alternative"
+                                    id="Total_Business_Connected"
+                                    placeholder="22"
+                                    type="number"
+                                    style={field_color}
+                                    onChange={(e) =>
+                                      setTotal_bussiness_connected(
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col lg="6">
+                                <FormGroup>
+                                  <label
+                                    className="form-control-label"
+                                    htmlFor="total_docs_received_today"
+                                  >
+                                    Total document Received Today:
+                                  </label>
+                                  <Input
+                                    className="form-control-alternative"
+                                    id="total_docs_received_today"
+                                    placeholder="22"
+                                    type="number"
+                                    style={field_color}
+                                    onChange={(e) =>
+                                      setTotal_docs_received_today(
+                                        e.target.value
+                                      )
+                                    }
+                                    required
+                                  />
+                                </FormGroup>
+                              </Col>
+                              <Col lg="6">
+                                <FormGroup>
+                                  <label
+                                    className="form-control-label"
+                                    htmlFor="Total_catalog_created"
+                                  >
+                                    Total Catalouge Created:
+                                  </label>
+                                  <Input
+                                    className="form-control-alternative"
+                                    id="Total_catalog_created"
+                                    placeholder="Cataloge"
+                                    style={field_color}
+                                    type="text"
+                                    onChange={(e) =>
+                                      setTotal_catalog_created(e.target.value)
+                                    }
+                                  />
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            {/** Dynamic input button add delete */}
 
-        <Container className="" style={{ backgroundColor:"#ffcc99" ,marginTop:"80px"}} >
-          <div className="col text-center text-white">
-            <h1>Submission form</h1>
-          </div>
+                            {inputList.map((y, i) => {
+                              return (
+                                <Row key={i}>
+                                  <Col lg="3">
+                                    <FormGroup>
+                                      <label
+                                        className="form-control-label"
+                                        htmlFor="doc_id"
+                                      >
+                                        Doc iD :
+                                      </label>
+                                      <Autocomplete
+                                        filterOptions={filterOptions}
+                                        id="combo-box-demo"
+                                        options={suggestions}
+                                        getOptionLabel={(option) =>
+                                          option?.DocID
+                                        }
+                                        // value={documentId}
+                                        // freeSolo={true}
+                                        sx={{ width: 300 }}
+                                        onChange={(e, value) => {
+                                          if (value?.DocID) {
+                                            const payload = {
+                                              target: {
+                                                name: "docId",
+                                                value: value.DocID,
+                                              },
+                                            };
+                                            handleInputChange(payload, i);
+                                          }
+                                          if (value?.CompanyName) {
+                                            const payload = {
+                                              target: {
+                                                name: "bussiness_name",
+                                                value: value.CompanyName,
+                                              },
+                                            };
+                                            handleInputChange(payload, i);
+                                          }
+                                        }}
+                                        onInputChange={(e, value) => {
+                                          if (value) {
+                                            const payload = {
+                                              target: {
+                                                name: "docId",
+                                                value: value,
+                                              },
+                                            };
+                                            handleInputChange(payload, i);
+                                            onSidChange(value);
+                                          }
+                                        }}
+                                        renderInput={(params) => (
+                                          <TextField
+                                            {...params}
+                                            label="docid"
+                                            style={{ backgroundColor: "white" }}
+                                          />
+                                        )}
+                                      />
+                                    </FormGroup>
+                                  </Col>
+                                  <Col lg="3">
+                                    <FormGroup>
+                                      <label
+                                        className="form-control-label"
+                                        htmlFor="bussiness-name"
+                                      >
+                                        Business Name:
+                                      </label>
+                                      <Input
+                                        className="form-control-alternative"
+                                        id="bussines-name"
+                                        placeholder="bussiness-name"
+                                        name="bussiness_name"
+                                        style={field_color}
+                                        type="text"
+                                        value={y.bussiness_name}
+                                        onChange={(e) =>
+                                          handleInputChange(e, i)
+                                        }
+                                      />
+                                    </FormGroup>
+                                  </Col>
+                                  <Col lg="2">
+                                    <FormGroup>
+                                      <label
+                                        className="form-control-label"
+                                        htmlFor="number"
+                                      >
+                                        Number:
+                                      </label>
+                                      <Input
+                                        className="form-control-alternative"
+                                        id="number"
+                                        placeholder=""
+                                        type="number"
+                                        style={field_color}
+                                        name="bussiness_number"
+                                        minLength={"1"}
+                                        value={y.bussiness_number}
+                                        onChange={(e) => {
+                                          if (e.target.value.length == 3)
+                                            return false;
+                                          handleInputChange(e, i);
+                                        }}
+                                        required
+                                      />
+                                    </FormGroup>
+                                  </Col>
+
+                                  <Col lg="2">
+                                    <FormGroup>
+                                      <label
+                                        htmlFor="update-status"
+                                        className="form-control-label"
+                                      >
+                                        Update Status
+                                      </label>
+                                      <Input
+                                        type="select"
+                                        name="update_status"
+                                        id="update-status"
+                                        className="form-control-alternative"
+                                        style={field_color}
+                                        //value={y.update_status}
+                                        onChange={(e) =>
+                                          handleInputChange(e, i)
+                                        }
+                                      >
+                                        <option>--</option>
+                                        <option>Completed</option>
+                                        <option>Owner Not Interested</option>
+                                        <option>Bussiness ShutDown</option>
+                                      </Input>
+                                    </FormGroup>
+                                  </Col>
+                                  <Col lg="2">
+                                    <div className="btn-box mt-4">
+                                      {inputList.length !== 1 && (
+                                        <button
+                                          className="mr10 btn btn-danger mt-2"
+                                          onClick={() => handleRemoveClick(i)}
+                                        >
+                                          Remove
+                                        </button>
+                                      )}
+                                      {inputList.length - 1 === i && (
+                                        <button
+                                          className="btn btn-warning mt-2"
+                                          onClick={handleAddClick}
+                                        >
+                                          Add
+                                        </button>
+                                      )}
+                                    </div>
+                                  </Col>
+                                </Row>
+                              );
+                            })}
+
+                            <Row>
+                              <Col lg="7">
+                                <FormGroup>
+                                  <label
+                                    className="form-control-label"
+                                    htmlFor="Total_approval_done_today"
+                                  >
+                                    Approval Done Today :
+                                  </label>
+
+                                  <select
+                                    name="Total_approval_done_today"
+                                    id="Total_approval_done_today"
+                                    onChange={(e) => {
+                                      setInputList1([
+                                        {
+                                          docId: "",
+                                          bussiness_name: "",
+                                          bussiness_number: "",
+                                          appr_status: "",
+                                        },
+                                      ]);
+                                      OpenInputField(e.target.value);
+                                    }}
+                                    style={field_color}
+                                  >
+                                    <option value="No" selected>
+                                      No
+                                    </option>
+                                    <option value="Yes">Yes</option>
+                                  </select>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+
+                            {inputList1.map((x, i) => {
+                              const documentId = x.docId;
+
+                              return (
+                                <div
+                                  style={{
+                                    display: showInput ? "block" : "none",
+                                  }}
+                                  key={i}
+                                >
+                                  <Row>
+                                    <Col mb="3">
+                                      <FormGroup>
+                                        <label
+                                          className="form-control-label"
+                                          htmlFor="approved-doc-id"
+                                        >
+                                          Doc iD 1:
+                                        </label>
+
+                                        <Autocomplete
+                                          filterOptions={filterOptions}
+                                          id="combo-box-demo"
+                                          options={suggestions}
+                                          getOptionLabel={(option) =>
+                                            option?.DocID
+                                          }
+                                          isOptionEqualToValue={(
+                                            option,
+                                            value
+                                          ) => option.DocID === value.DocID}
+                                          sx={{ width: 300 }}
+                                          onChange={(e, value) => {
+                                            e.preventDefault();
+
+                                            if (value?.DocID) {
+                                              const payload = {
+                                                target: {
+                                                  name: "docId",
+                                                  value: value.DocID,
+                                                },
+                                              };
+                                              handleInputChange1(payload, i);
+                                            }
+                                            if (value?.CompanyName) {
+                                              const payload = {
+                                                target: {
+                                                  name: "bussiness_name",
+                                                  value: value.CompanyName,
+                                                },
+                                              };
+                                              handleInputChange1(payload, i);
+                                            }
+                                          }}
+                                          onInputChange={(e, value) => {
+                                            const payload = {
+                                              target: {
+                                                name: "docId",
+                                                value: value,
+                                              },
+                                            };
+                                            handleInputChange1(payload, i);
+                                            onSidChange(value);
+                                          }}
+                                          renderInput={(params) => (
+                                            <TextField
+                                              {...params}
+                                              label="DocId"
+                                              style={{
+                                                backgroundColor: "white",
+                                                height: "40px",
+                                              }}
+                                              className="new-inputx"
+                                            />
+                                          )}
+                                        />
+                                      </FormGroup>
+                                    </Col>
+                                    <Col mb="3">
+                                      <FormGroup>
+                                        <label
+                                          className="form-control-label"
+                                          htmlFor="approved-bussiness-name"
+                                        >
+                                          Business Name:
+                                        </label>
+                                        <Input
+                                          className="form-control-alternative"
+                                          id="approved-bussiness-name"
+                                          placeholder="bussiness-name"
+                                          type="text"
+                                          style={field_color}
+                                          name="bussiness_name"
+                                          value={x.bussiness_name}
+                                          onChange={(e) =>
+                                            handleInputChange1(e, i)
+                                          }
+                                        />
+                                      </FormGroup>
+                                    </Col>
+
+                                    <Col mb="2">
+                                      <FormGroup>
+                                        <label
+                                          className="form-control-label"
+                                          htmlFor="approved-number"
+                                        >
+                                          Number:
+                                        </label>
+                                        <Input
+                                          className="form-control-alternative"
+                                          id="approved-number"
+                                          placeholder="number"
+                                          style={field_color}
+                                          type="number"
+                                          name="bussiness_number"
+                                          value={x.bussiness_number}
+                                          onChange={(e) =>
+                                            handleInputChange1(e, i)
+                                          }
+                                        />
+                                      </FormGroup>
+                                    </Col>
+
+                                    <Col mb="2">
+                                      <FormGroup>
+                                        <label
+                                          className="form-control-label"
+                                          htmlFor="appr_status"
+                                        >
+                                          Appr_Status
+                                        </label>
+                                        <Input
+                                          className="form-control-alternative"
+                                          id="appr_status"
+                                          placeholder=""
+                                          type="file"
+                                          name="appr_status"
+                                          onChange={(e) =>
+                                            handleImageInput(e, i)
+                                          }
+                                        />
+                                      </FormGroup>
+                                    </Col>
+                                    <Col mb="2">
+                                      <div className="btn-box mt-4">
+                                        {inputList1.length !== 1 && (
+                                          <button
+                                            className="mr1 btn btn-danger mt-2"
+                                            onClick={() =>
+                                              handleRemoveClick1(i)
+                                            }
+                                          >
+                                            Remove
+                                          </button>
+                                        )}
+                                        {inputList1.length - 1 === i && (
+                                          <button
+                                            className="btn btn-success mt-2"
+                                            onClick={handleAddClick1}
+                                          >
+                                            Add
+                                          </button>
+                                        )}
+                                      </div>
+                                    </Col>
+                                  </Row>
+                                </div>
+                              );
+                            })}
+
+                            <Row>
+                              <Col lg="4">
+                                <FormGroup>
+                                  <label
+                                    className="form-control-label"
+                                    htmlFor="My_monthly_target_approved"
+                                  >
+                                    Monthly Target Approved:
+                                  </label>
+                                  <Input
+                                    className="form-control-alternative"
+                                    id="My_monthly_target_approved"
+                                    placeholder="Monthly Target Approved"
+                                    type="text"
+                                    disabled="true"
+                                    style={field_color}
+                                    value={total_product_appr}
+                                    onChange={(e) =>
+                                      setMy_monthly_target_Total_approved(
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </FormGroup>
+                              </Col>
+                              <Col lg="4">
+                                <FormGroup>
+                                  <label
+                                    className="form-control-label"
+                                    htmlFor="Target_Left1"
+                                  >
+                                    Target Left:
+                                  </label>
+                                  <Input
+                                    className="form-control-alternative"
+                                    id="Target_Left1"
+                                    placeholder="Target Left"
+                                    style={field_color}
+                                    disabled="true"
+                                    type="number"
+                                    value={
+                                      My_monthly_target_approved -
+                                      total_product_appr
+                                    }
+                                    onChange={(e) =>
+                                      setTarget_left(e.target.value)
+                                    }
+                                  />
+                                </FormGroup>
+                              </Col>
+                              <Col lg="4">
+                                <FormGroup>
+                                  <label
+                                    className="form-control-label"
+                                    htmlFor="My_monthly_target_Total_approved"
+                                  >
+                                    Monthly Target-Total number/ Approved:
+                                  </label>
+                                  <Input
+                                    className="form-control-alternative"
+                                    id="My_monthly_target_Total_approved"
+                                    placeholder="Monthly target Total approved"
+                                    // type="number"
+                                    style={field_color}
+                                    disabled="true"
+                                    value={My_monthly_target_approved}
+                                    onChange={(e) =>
+                                      setMy_monthly_target_approved(
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </FormGroup>
+                              </Col>
+                            </Row>
+
+                            <Row>
+                              <Col lg="4">
+                                <FormGroup>
+                                  <label
+                                    className="form-control-label"
+                                    htmlFor="Total_number_product_created_today"
+                                  >
+                                    Total Number of Product created Today :
+                                  </label>
+                                  <Input
+                                    className="form-control-alternative"
+                                    id="Total_number_product_created_today"
+                                    placeholder="Total Number of Product created  Today"
+                                    type="text"
+                                    disabled="true"
+                                    style={field_color}
+                                    value={
+                                      Total_Product_created_Today
+                                        ? Total_Product_created_Today
+                                        : 0
+                                    }
+                                    defaultValue={0}
+                                    onChange={(e) =>
+                                      setTotal_number_product_created_today(
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </FormGroup>
+                              </Col>
+
+                              <Col lg="4">
+                                <FormGroup>
+                                  <label
+                                    className="form-control-label"
+                                    htmlFor="til_date"
+                                  >
+                                    Till Date Product(Day-1):
+                                  </label>
+                                  <Input
+                                    className="form-control-alternative"
+                                    id="til_date"
+                                    placeholder="Till Date Product"
+                                    type="number"
+                                    disabled="true"
+                                    style={field_color}
+                                    value={total_product_till_date}
+                                    onChange={(e) =>
+                                      setTil_date(e.target.value)
+                                    }
+                                  />
+                                </FormGroup>
+                              </Col>
+
+                              <Col lg="4">
+                                <FormGroup>
+                                  <label
+                                    className="form-control-label"
+                                    htmlFor="Month_Aproved_til_Date"
+                                  >
+                                    Month Aproved til Date(Day-1) :
+                                  </label>
+                                  <Input
+                                    className="form-control-alternative"
+                                    id="Month_Aproved_til_Date"
+                                    placeholder="Month Aproved til Date"
+                                    type="number"
+                                    disabled="true"
+                                    style={field_color}
+                                    value={total_product_appr}
+                                    onChange={(e) =>
+                                      setMonth_Aproved_til_Date(e.target.value)
+                                    }
+                                  />
+                                </FormGroup>
+                              </Col>
+                            </Row>
+
+                            <Row>
+                              <Col lg="6">
+                                <FormGroup>
+                                  <label
+                                    className="form-control-label"
+                                    htmlFor="total_number_product_approved_today"
+                                  >
+                                    Total Number Product Approved Today :
+                                  </label>
+                                  <Input
+                                    className="form-control-alternative"
+                                    id="total_number_product_approved_today"
+                                    placeholder="Total Number Product Approved  Today"
+                                    type="number"
+                                    disabled="true"
+                                    style={field_color}
+                                    value={
+                                      Total_Product_approved_Today
+                                        ? Total_Product_approved_Today
+                                        : 0
+                                    }
+                                    onChange={(e) =>
+                                      setTotal_number_product_approved_today(
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                          </div>
+                          <hr className="my-4" />
+                          {/* Address */}
+                          <h6 className="heading-small text-muted text-center mb-4">
+                            {/* Contact information */}
+                          </h6>
+
+                          <div className="text-center">
+                            <Button
+                              color="info"
+                              type="button"
+                              onClick={addVarient}
+                            >
+                              Submit
+                            </Button>
+                          </div>
+                        </Form>
+                      </Row>
+                    </Container>
+                  </CardBody>
+                </CardHeader>
+              </Card>
+            </div>
+          </Row>
         </Container>
-      </div>
-
-      <Container className="user-container" style={{marginTop:"10px",marginLeft:"-40px", width:"100%", maxWidth:"100%"}}>
-        <Row>
-          <div className="col">
-            <Card className="bg-secondary shadow">
-              <CardHeader className="border-0 "  style={{backgroundColor:"#edd8c4"}}>
-                <CardBody>
-                  <h3 className="mb-4 text-center">User Information</h3>
-                  <Container className="mt-4" fluid>
-                    <Row>
-                      <Form
-                        className="submission-form-field"
-                        onSubmit={addVarient}
-                      >
-                        <div className="">
-                          <Row>
-                            <Col lg="6">
-                              <FormGroup>
-                                <label
-                                  className="form-control-label"
-                                  htmlFor="input-username"
-                                >
-                                  Name:
-                                </label>
-                                <Input
-                                  className="form-control-alternative"
-                                  id="input-username"
-                                  placeholder="Enter Your Name"
-                                  type="text"
-                                  style={field_color}
-                                  value={name}
-                                  onChange={(e) => setName(e.target.value)}
-                                />
-                              </FormGroup>
-                            </Col>
-                            <Col lg="6">
-                              <FormGroup>
-                                <label
-                                  className="form-control-label"
-                                  htmlFor="input-date"
-                                >
-                                  Date:
-                                </label>
-                                <Input
-                                  className="form-control-alternative"
-                                  id="input-date"
-                                  type="date"
-                                  style={field_color}
-                                  min={dateString}
-                                  step="1"
-                                  max={current_date}
-                                  defaultValue={current_date}
-                                  onChange={(e) => setDate(e.target.value)}
-                                  required
-                                />
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col lg="6">
-                              <FormGroup>
-                                <label
-                                  className="form-control-label"
-                                  htmlFor="total_no_of_calls"
-                                >
-                                  Total Number Of Calls:
-                                </label>
-                                <Input
-                                  className="form-control-alternative"
-                                  id="total_no_of_calls"
-                                  placeholder="5"
-                                  type="number"
-                                  style={field_color}
-                                  onChange={(e) =>
-                                    setTotal_no_of_calls(e.target.value)
-                                  }
-                                  required
-                                />
-                              </FormGroup>
-                            </Col>
-                            <Col lg="6">
-                              <FormGroup>
-                                <label
-                                  className="form-control-label"
-                                  htmlFor="Total_Business_Connected"
-                                >
-                                  Total Business Connected :
-                                </label>
-                                <Input
-                                  className="form-control-alternative"
-                                  id="Total_Business_Connected"
-                                  placeholder="22"
-                                  type="number"
-                                  style={field_color}
-                                  onChange={(e) =>
-                                    setTotal_bussiness_connected(e.target.value)
-                                  }
-                                />
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col lg="6">
-                              <FormGroup>
-                                <label
-                                  className="form-control-label"
-                                  htmlFor="total_docs_received_today"
-                                >
-                                  Total document Received Today:
-                                </label>
-                                <Input
-                                  className="form-control-alternative"
-                                  id="total_docs_received_today"
-                                  placeholder="22"
-                                  type="number"
-                                  style={field_color}
-                                  onChange={(e) =>
-                                    setTotal_docs_received_today(e.target.value)
-                                  }
-                                  required
-                                />
-                              </FormGroup>
-                            </Col>
-                            <Col lg="6">
-                              <FormGroup>
-                                <label
-                                  className="form-control-label"
-                                  htmlFor="Total_catalog_created"
-                                >
-                                  Total Catalouge Created:
-                                </label>
-                                <Input
-                                  className="form-control-alternative"
-                                  id="Total_catalog_created"
-                                  placeholder="Cataloge"
-                                  style={field_color}
-                                  type="text"
-                                  onChange={(e) =>
-                                    setTotal_catalog_created(e.target.value)
-                                  }
-                                />
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          {/** Dynamic input button add delete */}
-
-                          {inputList.map((y, i) => {
-                            return (
-                              <Row key={i}>
-                                <Col lg="4">
-                                  <FormGroup>
-                                    <label
-                                      className="form-control-label"
-                                      htmlFor="doc_id"
-                                    >
-                                      Doc iD :
-                                    </label>
-                                    <Autocomplete
-                                      filterOptions={filterOptions}
-                                      id="combo-box-demo"
-                                      
-                                      options={suggestions}
-                                      getOptionLabel={(option) =>  option?.DocID
-                                        
-                                      }
-                                      // value={documentId}
-                                      // freeSolo={true}
-                                      sx={{ width: 300 }}
-                                      onChange={(e, value) => {
-                                        console.log(value)
-                                        if ( value?.DocID) {
-                                          const payload = {target:{name:"docId",value: value.DocID}};
-                                          handleInputChange(payload,i);
-                                          
-                                        }
-                                          if ( value?.CompanyName) {
-                                            const payload = {target:{name:"bussiness_name",value: value.CompanyName}};
-                                          handleInputChange(payload,i);
-                                          
-                                         
-                                        }
-                                      }}
-                                      onInputChange={(e, value) => {
-                                        if (value) {
-                                          const payload = {target:{name:"docId",value: value}};
-                                          handleInputChange(payload,i);
-                                          onSidChange(value)
-                                        }
-                                      }}
-                                      renderInput={(params) => (
-                                        <TextField {...params} label="docid" style={{backgroundColor:"white"}}  />
-                                      )}
-                                    />
-                                  </FormGroup>
-                                </Col>
-                                <Col lg="4">
-                                  <FormGroup>
-                                    <label
-                                      className="form-control-label"
-                                      htmlFor="bussiness-name"
-                                    >
-                                      Business Name:
-                                    </label>
-                                    <Input
-                                      className="form-control-alternative"
-                                      id="bussines-name"
-                                      placeholder="bussiness-name"
-                                      name="bussiness_name"
-                                      style={field_color}
-                                      type="text"
-                                      value={y.bussiness_name}
-                                      onChange={(e) => handleInputChange(e, i)}
-                                    />
-                                  </FormGroup>
-                                </Col>
-                                <Col lg="2">
-                                  <FormGroup>
-                                    <label
-                                      className="form-control-label"
-                                      htmlFor="number"
-                                    >
-                                      Number:
-                                    </label>
-                                    <Input
-                                      className="form-control-alternative"
-                                      id="number"
-                                      placeholder=""
-                                      type="number"
-                                      style={field_color}
-                                      name="bussiness_number"
-                                      value={y.bussiness_number}
-                                      onChange={(e) => handleInputChange(e, i)}
-                                    />
-                                  </FormGroup>
-                                </Col>
-                                <Col lg="2">
-                                <div className="btn-box mt-4">
-                                  {inputList.length !== 1 && (
-                                    <button
-                                      className="mr10 btn btn-danger mt-2"
-                                      onClick={() => handleRemoveClick(i)}
-                                    >
-                                      Remove
-                                    </button>
-                                  )}
-                                  {inputList.length - 1 === i && (
-                                    <button
-                                      className="btn btn-warning mt-2"
-                                      onClick={handleAddClick}
-                                    >
-                                      Add
-                                    </button>
-                                  )}
-                                </div>
-                                </Col>
-                              </Row>
-                            );
-                          })}
-                          {/* <div style={{ marginTop: 20 }}>{JSON.stringify(inputList)}</div> */}
-
-                          <Row>
-                            <Col lg="7">
-                              <FormGroup>
-                                <label
-                                  className="form-control-label"
-                                  htmlFor="Total_approval_done_today"
-                                >
-                                  Approval Done Today :
-                                </label>
-                                {/* <Input
-                                  className="form-control-alternative"
-                                  id="Total_approval_done_today"
-                                  placeholder="Total approval done Today"
-                                  type="text"
-                                  onChange={(e) =>
-                                    setTotal_approval_done_today(e.target.value)
-                                  }
-                                /> */}
-                                <select name="Total_approval_done_today" id="Total_approval_done_today"   onChange={(e) =>{
-                                     setInputList1([
-                                      {
-                                        
-                                        docId: "",
-                                        bussiness_name: "",
-                                        bussiness_number: "",
-                                        appr_status: '',
-                                      },
-                                    ])
-                                     OpenInputField(e.target.value)
-                                }
-                                    
-                                    
-                                  }
-                                
-                                 style={field_color}>
-                                  <option value="No" selected>No</option>
-                                  <option value="Yes">Yes</option>
-                                  
-                                </select>
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          {/** Dynamic input button add delete */}
-                          {/* <div className="submission-text mt-4 mb-4">
-                   <h3 > Approved Today </h3>
-                   </div>
-                      */}
-
-                          {inputList1.map((x, i) => {
-                            const documentId = x.docId;
-                            console.log(x)
-                           
-                            return (
-                             <div style={{display:showInput  ?"block":"none"}} key={i}>
-                              <Row  >
-                                {/* <Col mb="2">
-                                  <FormGroup>
-                                    <label
-                                      className="form-control-label"
-                                      htmlFor="agentName"
-                                      onClick={()=>console.log(inputList1)}
-                                    >
-                                      Agent Name:
-                                    </label>
-                                    <Input
-                                      className="form-control-alternative"
-                                      id="agentName"
-                                      placeholder="agentName"
-                                      name="agentName"
-                                      type="text"
-                                      value={name}
-                                    />
-                                  </FormGroup>
-                                </Col> */}
-
-                                <Col mb="3">
-                                  <FormGroup>
-                                    <label
-                                      className="form-control-label"
-                                      htmlFor="approved-doc-id"
-                                    >
-                                      Doc iD 1:
-                                    </label>
-                                    {/* <Input
-                            className="form-control-alternative"
-                            id="approved-doc-id"
-                            placeholder="Doc id"
-                            name="docId"
-                            type="text"
-                            value={x.docId}
-                            onChange={e => handleInputChange1(e, i)}
-                            
-                          /> */}
-
-                                    <Autocomplete
-                                      filterOptions={filterOptions}
-                                      id="combo-box-demo"
-                                      options={suggestions}
-                                      
-                                  
-                                      
-                                      getOptionLabel={(option) =>  option?.DocID
-                                        
-                                      }
-                                     isOptionEqualToValue={(option, value) => option.DocID === value.DocID}
-                                     
-                                      sx={{ width: 300 }}
-                                      onChange={(e, value) => {
-                                        e.preventDefault()
-                                        console.log({value})
-                                        
-                                        if ( value?.DocID ) {
-                                          const payload = {target:{name:"docId",value: value.DocID}};
-                                          handleInputChange1(payload,i);
-                                        }
-                                          if ( value?.CompanyName) {
-                                            const payload = {target:{name:"bussiness_name",value: value.CompanyName}};
-                                          handleInputChange1(payload,i);
-                                         
-                                        }
-                                      }}
-                                    
-                                     
-                                      
-                                      onInputChange={(e, value) => {
-                                       
-                                       
-                                          const payload = {target:{name:"docId",value: value}};
-                                          handleInputChange1(payload,i);
-                                          onSidChange(value)
-
-                                        
-                                      }}
-                                      renderInput={(params) => (
-                                        <TextField {...params} label="DocId" style={{backgroundColor:"white",height:"40px"}}  className="new-inputx" />
-                                      )}
-                                    />
-                                  </FormGroup>
-                                </Col>
-                                <Col mb="3">
-                                  <FormGroup>
-                                    <label
-                                      className="form-control-label"
-                                      htmlFor="approved-bussiness-name"
-                                    >
-                                      Business Name:
-                                    </label>
-                                    <Input
-                                      className="form-control-alternative"
-                                      id="approved-bussiness-name"
-                                      placeholder="bussiness-name"
-                                      type="text"
-                                      style={field_color}
-                                      name="bussiness_name"
-                                      value={x.bussiness_name}
-                                      onChange={(e) => handleInputChange1(e, i)}
-                                    />
-                                  </FormGroup>
-                                </Col>
-
-                                <Col mb="2">
-                                  <FormGroup>
-                                    <label
-                                      className="form-control-label"
-                                      htmlFor="approved-number"
-                                    >
-                                      Number:
-                                    </label>
-                                    <Input
-                                      className="form-control-alternative"
-                                      id="approved-number"
-                                      placeholder="number"
-                                      style={field_color}
-                                      type="number"
-                                      name="bussiness_number"
-                                      value={x.bussiness_number}
-                                      onChange={(e) => handleInputChange1(e, i)}
-                                    />
-                                  </FormGroup>
-                                </Col>
-
-                                <Col mb="2">
-                                  <FormGroup>
-                                    <label
-                                      className="form-control-label"
-                                      htmlFor="appr_status"
-                                    >
-                                      Appr_Status
-                                    </label>
-                                    <Input
-                                      className="form-control-alternative"
-                                      id="appr_status"
-                                      placeholder=""
-                                      type="file"
-                                      // name="appr_status"
-                                      // accept="image/*"
-                                      // value={x.appr_status}
-                                      onChange={(e) => handleImageInput(e, i)}
-                                    />
-                                  </FormGroup>
-                                </Col>
-                                <Col mb="2">
-                                <div className="btn-box mt-4">
-                                  {inputList1.length !== 1 && (
-                                    <button
-                                      className="mr1 btn btn-danger mt-2"
-                                      onClick={() => handleRemoveClick1(i)}
-                                    >
-                                      Remove
-                                    </button>
-                                  )}
-                                  {inputList1.length - 1 === i && (
-                                    <button
-                                      className="btn btn-success mt-2"
-                                      onClick={handleAddClick1}
-                                    >
-                                      Add
-                                    </button>
-                                  )}
-                                </div>
-                                </Col>
-                              </Row>
-                              </div>
-                            );
-                          })}
-
-                          <Row>
-                            <Col lg="4">
-                              <FormGroup>
-                                <label
-                                  className="form-control-label"
-                                  htmlFor="My_monthly_target_approved"
-                                >
-                                  Monthly Target Approved:
-                                </label>
-                                <Input
-                                  className="form-control-alternative"
-                                  id="My_monthly_target_approved"
-                                  placeholder="Monthly Target Approved"
-                                  type="text"
-                                  disabled="true"
-                                  style={field_color}
-                                  value={total_product_appr}
-                                  // value={My_monthly_target_approved}
-                                  // onChange={(e)=>setMy_monthly_target_approved(e.target.value)}
-                                  onChange={(e)=>setMy_monthly_target_Total_approved(e.target.value)}
-                                />
-                              </FormGroup>
-                            </Col>
-                            <Col lg="4">
-                              <FormGroup>
-                                <label
-                                  className="form-control-label"
-                                  htmlFor="Target_Left1"
-                                >
-                                  Target Left:
-                                </label>
-                                <Input
-                                  className="form-control-alternative"
-                                  id="Target_Left1"
-                                  placeholder="Target Left"
-                                  style={field_color}
-                                  disabled="true"
-                                  type="number"
-                                  // value={My_monthly_target_approved-My_monthly_target_Total_approved}
-                                  value={
-                                    My_monthly_target_approved -
-                                    total_product_appr
-                                  }
-                                  
-                                  
-
-                                  onChange={(e)=>setTarget_left(e.target.value)}
-                                />
-                              </FormGroup>
-                            </Col>
-                            <Col lg="4">
-                              <FormGroup>
-                                <label
-                                  className="form-control-label"
-                                  htmlFor="My_monthly_target_Total_approved"
-                                >
-                                  Monthly Target-Total number/ Approved:
-                                </label>
-                                <Input
-                                  className="form-control-alternative"
-                                  id="My_monthly_target_Total_approved"
-                                  placeholder="Monthly target Total approved"
-                                  // type="number"
-                                  style={field_color}
-                                  disabled="true"
-                                  value={My_monthly_target_approved}
-                                  onChange={(e)=>setMy_monthly_target_approved(e.target.value)}
-                                />
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                         
-
-                          <Row>
-                            <Col lg="4">
-                              <FormGroup>
-                                <label
-                                  className="form-control-label"
-                                  htmlFor="Total_number_product_created_today"
-                                >
-                                  Total Number of Product created Today :
-                                </label>
-                                <Input
-                                  className="form-control-alternative"
-                                  id="Total_number_product_created_today"
-                                  placeholder="Total Number of Product created  Today"
-                                  type="text"
-                                  disabled="true"
-                                  style={field_color}
-                                  value={
-                                    Total_Product_created_Today
-                                      ? Total_Product_created_Today
-                                      : 0
-                                  }
-                                  defaultValue={0}
-                                  // onChange={(e)=>setTotal_number_product_created_today(e.target.value)}
-                                  onChange={(e) =>
-                                    setTotal_number_product_created_today(
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                              </FormGroup>
-                            </Col>
-
-                            <Col lg="4">
-                              <FormGroup>
-                                <label
-                                  className="form-control-label"
-                                  htmlFor="til_date"
-                                >
-                                  Till Date Product(Day-1):
-                                </label>
-                                <Input
-                                  className="form-control-alternative"
-                                  id="til_date"
-                                  placeholder="Till Date Product"
-                                  type="number"
-                                  disabled="true"
-                                  style={field_color}
-                                  value={total_product_till_date}
-                                  onChange={(e) =>
-                                    setTil_date(
-                                     e.target.value
-                                    )
-                                  }
-                                  
-                                  
-                                />
-                              </FormGroup>
-                            </Col>
-
-                            <Col lg="4">
-                              <FormGroup>
-                                <label
-                                  className="form-control-label"
-                                  htmlFor="Month_Aproved_til_Date"
-                                >
-                                  Month Aproved til Date(Day-1) :
-                                </label>
-                                <Input
-                                  className="form-control-alternative"
-                                  id="Month_Aproved_til_Date"
-                                  placeholder="Month Aproved til Date"
-                                  type="number"
-                                  disabled="true"
-                                  style={field_color}
-                                  value={total_product_appr}
-                                  onChange={(e) =>
-                                    setMonth_Aproved_til_Date(
-                                     e.target.value
-                                    )
-                                  }
-                                />
-                              </FormGroup>
-                            </Col>
-                          </Row>
-
-                          <Row>
-                            <Col lg="6">
-                              <FormGroup>
-                                <label
-                                  className="form-control-label"
-                                  htmlFor="total_number_product_approved_today"
-                                >
-                                  Total Number Product Approved Today :
-                                </label>
-                                <Input
-                                  className="form-control-alternative"
-                                  id="total_number_product_approved_today"
-                                  placeholder="Total Number Product Approved  Today"
-                                  type="number"
-                                  disabled="true"
-                                  style={field_color}
-                                  value={
-                                    Total_Product_approved_Today?Total_Product_approved_Today:0
-                                    
-                                  }
-                                  onChange={(e) =>
-                                    setTotal_number_product_approved_today(
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                        </div>
-                        <hr className="my-4" />
-                        {/* Address */}
-                        <h6 className="heading-small text-muted text-center mb-4">
-                          {/* Contact information */}
-                        </h6>
-
-                        <div className="text-center">
-                          <Button
-                            color="info"
-                            type="button"
-                            onClick={addVarient}
-                          >
-                            Submit
-                          </Button>
-                         
-                        </div>
-                      </Form>
-                    </Row>
-                  </Container>
-                </CardBody>
-              </CardHeader>
-            </Card>
-          </div>
-        </Row>
-      </Container>
       </UserLayout>
     </>
   );
 }
-
-
 
 export default Submission;
 
@@ -1397,4 +1347,3 @@ export async function getServerSideProps(context) {
     props: { session },
   };
 }
-

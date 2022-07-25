@@ -6,7 +6,7 @@ const productSchema = mongoose.Schema({
   agentId:{type:String,required:false},
   date:{type:Date,required:false},
   inputList:{type:Array,required:false},
-  inputList1:{type:Array,required:false},
+  inputList1:{type:Array,required:false,},
   images: { type: Array, required: false },
 
  

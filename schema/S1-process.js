@@ -10,7 +10,7 @@ const S1ProcessSchema = mongoose.Schema(
     process_name: { type: Array, required: false },
     date: { type: Array, required: false },
     brand_name: { type: String, required: false },
-    s_id: { type: String, required: false },
+    s_id: { type: String, required: false ,unique: true},
 
     SID1: { type: String, required: false },
     Contractor_Name: { type: String, required: false },

@@ -1,7 +1,4 @@
-import { hash } from 'bcrypt';
-
-import  admin  from '../../../../schema/admin';
-
+import admin from '../../../../schema/admin';
 import dbConnect from '../../../../utils/DBconnect';
 import { superAdmin } from '../../../../utils/middleware';
 
@@ -11,7 +8,7 @@ export default superAdmin(async function handler(req, res) {
     var updatePayload = {};
 
     req.body.username ? Object.assign(updatePayload, { username: req.body.username }) : null;
-    req.body.password ? Object.assign(updatePayload, { password: await hash(req.body.password, 10) }) : null;
+    req.body.password ? Object.assign(updatePayload, { password:  hash(req.body.password, 10) }) : null;
     req.body.isSuperAdmin ? Object.assign(updatePayload, { isSuperAdmin: req.body.isSuperAdmin }) : null;
     req.body.task ? Object.assign(updatePayload, { task: parseInt(req.body.task) }) : null;
 
