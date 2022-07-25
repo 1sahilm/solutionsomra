@@ -58,7 +58,7 @@ function CreatedData(props) {
   });
   // const [date,setDate] = useState('');
 
-  console.log(users);
+ 
 
   const [page, setPage] = useState(1);
 
@@ -75,11 +75,11 @@ function CreatedData(props) {
 
 
   const searchDocuments = async (from, to) => {
-    console.log(from,to)
+   
     await axios
       .get(`/api/admin/agency/v1statusReport?fromDate=${from}&toDate=${to}`)
       .then((response) => {
-        console.log(response.data);
+       
 
         setUsers(response.data.data);
         setServerPage(response.data.totalPages);
@@ -118,7 +118,7 @@ function CreatedData(props) {
 
   const curr_date = (e) => setActiveDate(e.target.value);
 
-  console.log(searchData);
+ 
 
   //=======================================================================================================
   return (
@@ -219,7 +219,7 @@ function CreatedData(props) {
                   return (
                     <>
                       {user?.inputList.map((item, index) => {
-                        console.log(item.length);
+                       
                         return (
                           <tr key={index}>
                             <td>{index + 1}.</td>

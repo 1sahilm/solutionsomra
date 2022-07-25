@@ -182,7 +182,7 @@ function S1Data() {
   const [activeDate, setActiveDate] = useState(current_date);
 
   const handleFilterDate = (date, field) => {
-    console.log(date, field);
+   
   };
 
   // ===================the search result=========Start Filter by Date
@@ -199,8 +199,7 @@ function S1Data() {
   const curr_date = (e) => setActiveDate(e.target.value);
 
   // ================== Total =======
-  console.log("s1data",fromDate)
-  console.log("s1data",toDate)
+
 
   
 

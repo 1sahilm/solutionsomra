@@ -42,7 +42,7 @@ try {
  }})
 
  const pages = Math.ceil(totalDocuments/limit)
- res.status(200).json({ success: true, data: products ,totalPages:pages ,currentPage:page})
+ res.status(200).json({ success: true, data: products ,totalPages:pages ,currentPage:page,count:totalDocuments})
 }
 
 

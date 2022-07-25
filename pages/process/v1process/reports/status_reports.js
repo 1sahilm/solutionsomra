@@ -88,13 +88,14 @@ function StatusData() {
   };
 
   const searchDocuments = async (from, to) => {
-    console.log(from,to)
+    
     await axios
       .get(`/api/admin/agency/v1statusReport?fromDate=${from}&toDate=${to}`)
       .then((response) => {
-        console.log(response.data);
+       
 
         setUsers(response.data.data);
+        setCount(response.data.count);
         setServerPage(response.data.totalPages);
         setPage(1);
       });
@@ -121,6 +122,7 @@ function StatusData() {
       router.reload();
     });
   };
+  console.log(count)
 
   //DAte ===============Start=============Current date============
 
@@ -246,7 +248,7 @@ function StatusData() {
   );
 
   const total_product_till_date = total1.reduce((prev, curr) => prev + curr, 0);
-  console.log(total_product_till_date);
+  
 
   const total3 = users.map((item) =>
     item.name == session?.user?.name
@@ -255,7 +257,7 @@ function StatusData() {
   );
 
   const total_product_appr = total3.reduce((prev, curr) => prev + curr, 0);
-  console.log(total_product_appr);
+  
 
   //=======================================================================================================
   return (
@@ -311,7 +313,7 @@ function StatusData() {
         <div>
           <h3>
             <span style={{ color: "green" }}>TotalV1 Reports Created=</span>
-            <span style={{ color: "red" }}>{totalCreatedReport}</span>
+            <span style={{ color: "red" }}>{count*(page)}</span>
           </h3>
         </div>
 
@@ -367,7 +369,7 @@ function StatusData() {
                 <h1>loaading</h1>
               ) : (
                 users?.map((user, index) => {
-                  console.log(user?.total_number_product_approved_today);
+            
 
                   let month_till_approved = 0;
                   month_till_approved =

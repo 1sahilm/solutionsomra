@@ -1,11 +1,15 @@
-import React from 'react';
-import Link from 'next/link';
-import Head  from 'next/head';
+import React, {
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-import { useRef,useEffect ,useState} from "react";
-import axios from "axios";
-import { toast, ToastContainer } from 'react-toastify';
-
+import axios from 'axios';
+import Head from 'next/head';
+import {
+  toast,
+  ToastContainer,
+} from 'react-toastify';
 
 function Register() {
   const [name,setName]=useState('')
@@ -30,7 +34,7 @@ function Register() {
   useEffect(() => {
     if (password === confirmPassword) {
       setValid(true);
-      console.log(password, confirmPassword);
+     
     } else {
       setValid(false);
     }
@@ -40,7 +44,7 @@ function Register() {
     setChecked(!checked);
   };
 
-  console.log(checked)
+
 
   const handleNewAdmin = async () => {
     const payload = {
@@ -51,7 +55,7 @@ function Register() {
     };
     try {
       await axios.post('/api/user/create', payload).then(async (response) => {
-        console.log(response);
+       
 
         if (response.data.success) {
           setCount(count + 1);
@@ -163,7 +167,7 @@ export default Register
 
 export async function getServerSideProps(context) {
   const session = await getSession({ req: context.req });
-  console.log(session)
+ 
 
   if (session) {
     return {

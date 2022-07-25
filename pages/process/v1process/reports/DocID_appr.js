@@ -107,11 +107,11 @@ function ApprovedData() {
   // }, []);
 
   const searchDocuments = async (from, to) => {
-    console.log(from,to)
+   
     await axios
       .get(`/api/admin/agency/docid_approved?fromDate=${from}&toDate=${to}`)
       .then((response) => {
-        console.log(response.data);
+       
 
         setUsers(response.data.data);
         setServerPage(response.data.totalPages);
@@ -151,9 +151,7 @@ function ApprovedData() {
 
   const curr_date = (e) => setActiveDate(e.target.value);
 
-  
-  console.log("v1data",new Date(fromDate))
-  console.log("v1data",toDate)
+ 
 
   //=======================================================================================================
   return (
@@ -254,7 +252,7 @@ function ApprovedData() {
                   return (
                     <>
                       {user?.inputList1.map((item, index) => {
-                        console.log(item);
+                       
                         return (
                           <tr key={index}>
                             <td>{index + 1}.</td>

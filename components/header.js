@@ -1,18 +1,24 @@
-import React, { useRef, useState } from "react";
-import Head from "next/head";
-import Image from "next/image";
-import style from "../styles/header/header.module.scss";
-import { useDetectOutsideClick } from "./useDetectOutsideClick";
-import Link from "next/link";
+import React, {
+  useRef,
+  useState,
+} from 'react';
+
 // import { useState , useRef } from 'react/cjs/react.production.min';
-import { signOut } from "next-auth/client";
-import { useSession } from "next-auth/client";
-import { useRouter } from "next/router";
+import {
+  signOut,
+  useSession,
+} from 'next-auth/client';
+import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+import { useDetectOutsideClick } from './useDetectOutsideClick';
 
 function Header() {
   const router = useRouter();
   const [session, loading] = useSession();
-  console.log(session);
+ 
   const [name, setName] = useState([session?.user?.name]);
   const dropdownRef = useRef(null);
   const [isActive, setIsActive] = useDetectOutsideClick(dropdownRef, false);
