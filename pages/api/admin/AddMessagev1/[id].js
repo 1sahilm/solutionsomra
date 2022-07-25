@@ -1,8 +1,6 @@
-
 import Message from '../../../../schema/AddMessage';
-
-import dbConnect from '../../../utils/DBconnect';
-import { superAdmin } from '../../../utils/middleware';
+import dbConnect from '../../../../utils/DBconnect';
+import { superAdmin } from '../../../../utils/middleware';
 
 dbConnect();
 export default superAdmin(async function handler(req, res) {
