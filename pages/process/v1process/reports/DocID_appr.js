@@ -144,122 +144,14 @@ function ApprovedData() {
 
   //DAte ===============Start=============Current date============
 
-  const today = new Date();
-  const yesterday = new Date(Date.parse(today) - 86400000);
-  let year = yesterday.getFullYear();
-  let month = yesterday.getMonth() + 1;
-  let dt = yesterday.getDate();
-
-  if (dt < 10) {
-    dt = "0" + dt;
-  }
-  if (month < 10) {
-    month = "0" + month;
-  }
-  const dateString = year + "-" + month + "-" + dt;
-
-  // today
-  let month1 = today.getMonth() + 1;
-  let dt1 = today.getDate();
-
-  if (dt1 < 10) {
-    dt1 = "0" + dt1;
-  }
-  if (month1 < 10) {
-    month1 = "0" + month1;
-  }
-  
-  const current_date = today.getFullYear() + "-" + month1 + "-" + dt1;
-  const endDAte = today.getFullYear() + "-" + month1 + "-" + dt1;
-
-  const [date, setDate] = useState(current_date);
-
-  const [activeDate, setActiveDate] = useState(current_date);
-
-
  
-
-  const filter = (e) => {
-    const keyword = e.target.value;
-
-    setDate(keyword);
-  };
-
- 
-
-  const handleFilterDate = (date, field) => {
-    const fromDateUnix = fromDate
-      ? Math.floor(new Date(fromDate).getTime() / 1000)
-      : "";
-    const toDateUnix = toDate
-      ? Math.floor(new Date(toDate).getTime() / 1000)
-      : "";
-
-    const filteredArray = [];
-
-    if (toDate && fromDate) {
-      users.map((user) => {
-        const UserUnix = Math.floor(new Date(user.date).getTime() / 1000);
-
-        if (fromDateUnix <= UserUnix && toDateUnix >= UserUnix) {
-          filteredArray.push(user);
-        }
-      });
-    } else if (fromDate) {
-      users.map((user) => {
-        const UserUnix = Math.floor(new Date(user.date).getTime() / 1000);
-        const TodayUnix = Math.floor(new Date().getTime() / 1000);
-
-        if (fromDateUnix <= UserUnix && TodayUnix >= UserUnix) {
-          filteredArray.push(user);
-        }
-      });
-    } else if (toDate) {
-      users.map((user) => {
-        filteredArray.push(user);
-      });
-    }
-
-    setSearchData(filteredArray);
-  };
-  const handleInput = (field, value) => {
-    switch (field) {
-      case "from":
-        fromDate = value;
-        handleFilterDate(value, "from");
-        break;
-      case "to":
-        toDate = value;
-        handleFilterDate(value, "to");
-        break;
-      default:
-        break;
-    }
-  };
-  const filterByDate = (keyword) => {
-    if (keyword != "") {
-      const results = users.filter((user) => {
-        return user.date.toString().startsWith(keyword.toString());
-        
-      });
-      setSearchData(results);
-    } else {
-      setSearchData(users);
-      // If the text field is empty, show all users
-    }
-  };
-
-  useEffect(() => {
-    filterByDate(date);
-  }, [date, users]);
-
 
 
   // ===================End=========>>> Filter by Date====
 
   const curr_date = (e) => setActiveDate(e.target.value);
 
-  console.log(searchData);
+  
   console.log("v1data",new Date(fromDate))
   console.log("v1data",toDate)
 
@@ -355,7 +247,7 @@ function ApprovedData() {
               </tr>
             </thead>
             <tbody>
-              {!searchData ? (
+              {!users ? (
                 <h1>loaading</h1>
               ) : (
                 users?.map((user, index) => {
