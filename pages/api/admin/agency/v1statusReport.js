@@ -34,7 +34,7 @@ try {
    $lte: new Date(toDate),
  }}).limit(limit).skip((page-1)*limit).sort({date:-1})
 
- console.log({"hbhghg":products})
+
 
  const totalDocuments = await Product.countDocuments({date:{
    $gte: new Date(fromDate),
@@ -48,7 +48,7 @@ try {
 
 
 } catch (error) {
- console.log(error?.message)
+ 
  res.status(400).json({ success: false,error:error?.message})
 }
 
@@ -65,7 +65,7 @@ try {
       const {isActive} = body;
       const {id} = body;
       
-      console.log("id"+id)
+      
 
       if(!id) {
         res.status(400).json({ success: false,message:"id is required" })

@@ -127,7 +127,7 @@ function ApprovedData() {
   const loadNextPage = async () => {
     await axios
       .get(
-        `/api/admin/agency/docid_approved?page=${page}&fromDate=${fromDate}&toDate=${toDate}`
+        `/api/admin/agency/docid_approved?page=${page+1}&fromDate=${fromDate}&toDate=${toDate}`
       )
       .then((response) => {
         setUsers((prevData) => [...prevData, ...response.data.data]);

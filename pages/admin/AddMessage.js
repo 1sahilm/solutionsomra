@@ -52,7 +52,8 @@ function AddMessage() {
   useEffect(() => {
     if (password === confirmPassword) {
       setValid(true);
-      console.log(password, confirmPassword);
+      
+      
     } else {
       setValid(false);
     }
@@ -62,7 +63,8 @@ function AddMessage() {
     setChecked(!checked);
   };
 
-  console.log(checked);
+  
+  
 
   const handleNewAdmin = async (e) => {
     e.preventDefault();
@@ -87,7 +89,8 @@ function AddMessage() {
           }
         });
     } catch (err) {
-      console.log(err);
+     
+      
       //   setCount(count + 1);
       //   toast(response?.data?.data)
     }

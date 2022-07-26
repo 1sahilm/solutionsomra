@@ -71,7 +71,7 @@ export default async function handler (req, res) {
       }else{
         // const autocomplete = await Product.findOne({ date:date,agentId:agentId });
     
-        const autocomplete = await Product.findOne({date:date.slice(0,10),agentId:agentId}) ;
+        const autocomplete = await Product.findOne({date:date,agentId:agentId}) ;
         const docid2= await Product.find({},{inputList1:1})
 
         let docid2Array = []
@@ -81,7 +81,7 @@ export default async function handler (req, res) {
          })
         })
         
-        // console.log({"Amitobject":docid2Array})
+        
         // const findByDocId=await Product.findOne({inputList1:{$elemMatch:{docId:removDublicateDocid}}})
         let docid2ArrayLocal = []
         inputList1.map((item)=>{
@@ -92,18 +92,18 @@ export default async function handler (req, res) {
 
         const findByID=docid2ArrayLocal.filter((item)=> docid2Array.includes(item))
 
-        console.log({findByID})
+        
 
         // const findByDocId2=await Product.findOne({inputList1:{$elemMatch:{docId:removDublicateDocid2}}})
         // const findByDocId3=await Product.findOne({inputList1:{$elemMatch:{docId:removDublicateDocid3}}})
         // const findByDocId4=await Product.findOne({inputList1:{$elemMatch:{docId:removDublicateDocid4}}})
-        // console.log({"test2222":findByDocId})
+        
         
       // autocomplete ? await Products.deleteOne({ _id: autocomplete.id }) : null;
       //|| (findByDocId&&total_approval_done_today=="Yes")
       //findByDocid&&total_approval_done_today=="Yes"
 
-      console.log(docid2ArrayLocal)
+      
 
       if ((autocomplete && !force_replace)||(findByID?.length> 0&&total_approval_done_today=="Yes" )) {
         if(findByID?.length> 0&&total_approval_done_today=="Yes" ){
@@ -149,7 +149,7 @@ export default async function handler (req, res) {
           },
         ];
 
-        console.log(data);
+       
         
 
 
@@ -157,10 +157,10 @@ export default async function handler (req, res) {
         // res.status(201).json({ success: true, data: "created successfully"})
 
       try {
-        await Product.create(data)
+        await  Product.insertMany(data)
         res.status(201).json({ success: true, data: "created successfully"})
       } catch (error) {
-        console.log(error.message)
+        
         res.status(400).json({ success: false ,data:"Failed to Create"})
       }
     }

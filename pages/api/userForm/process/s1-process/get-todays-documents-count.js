@@ -36,7 +36,7 @@ export default async function handler (req, res) {
 
     const id = query?.id;
 
-    console.log({id})
+   
       
         try {
             let startOfToday = new Date();

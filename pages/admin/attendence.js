@@ -106,7 +106,8 @@ function UserAttendence() {
         counts[x] = (counts[x] || 0) + 1;
       });
       setPresentUsers(counts);
-      //  console.log(counts)
+      
+      
     });
   }, [last_Month_s1Data]);
 
@@ -123,7 +124,7 @@ function UserAttendence() {
         counts[x] = (counts[x] || 0) + 1;
       });
       setCurrent_Month_presentUsers(counts);
-      //  console.log(counts)
+      
     });
   }, [current_Month_s1Data]);
 
@@ -241,12 +242,12 @@ function UserAttendence() {
                   const amit1 = Object.entries(presentUsers).map(
                     (item) => item
                   );
-                  // console.log(presentUsers)
+                 
                   const amit2 = amit1.filter((item) =>
                     item[0] == user.name ? item : 0
                   );
                   const amit3 = amit2.map((item) => item[1]);
-                  // console.log(amit3[0])
+                  
 
                   // current Month attendence
                   const s1_currentData = Object.entries(

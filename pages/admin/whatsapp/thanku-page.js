@@ -22,7 +22,7 @@ function Submited_data () {
 
   const whatsappData = useSelector((state)=> state.whatsapp)
   const {array } = whatsappData;
-  console.log(whatsappData)
+
 
 
   
@@ -82,7 +82,7 @@ function Submited_data () {
   // const mydataArray=[{name:title},{Date:title2},{no_calls:title3},title4,title5,title6,title7,title8].split(",")
  
 
-  console.log(total_number_product_approved_today)
+
 
  
 
@@ -91,7 +91,7 @@ function Submited_data () {
   useEffect(() => {
     if (password === confirmPassword) {
       setValid(true);
-      console.log(password, confirmPassword);
+     
     } else {
       setValid(false);
     }
@@ -101,7 +101,7 @@ function Submited_data () {
     setChecked(!checked);
   };
 
-  console.log(checked)
+ 
 
   const handleNewAdmin = async () => {
     const payload = {
@@ -112,7 +112,7 @@ function Submited_data () {
     };
     try {
       await axios.post('/api/user/create', payload).then(async (response) => {
-        console.log(response);
+        
 
         if (response.data.success) {
           setCount(count + 1);

@@ -73,7 +73,7 @@ export default async function handler (req, res) {
 
       // }
       } catch (error) {
-        console.log(error?.message)
+        
         res.status(400).json({ success: false,error:error?.message})
       }
       break

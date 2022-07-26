@@ -1,10 +1,18 @@
-import Link from "next/link";
-import Head from "next/head";
-import React from "react";
-import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/router";
-import { signIn, useSession, getSession } from "next-auth/client";
-import { toast, ToastContainer } from "react-toastify";
+import React, {
+  useRef,
+  useState,
+} from 'react';
+
+import {
+  getSession,
+  signIn,
+} from 'next-auth/client';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import {
+  toast,
+  ToastContainer,
+} from 'react-toastify';
 
 function Login() {
   const router = useRouter();

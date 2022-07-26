@@ -5,6 +5,7 @@ import React, {
 } from 'react';
 
 import axios from 'axios';
+import { throttle } from 'lodash';
 import {
   getSession,
   useSession,
@@ -44,6 +45,7 @@ function Submission() {
   const dispatch = useDispatch();
 
   const [session, loading] = useSession();
+  const [isLoading, setIsLoading] = useState(false)
 
   const [autoComplete, setAutoComplete] = useState("");
   const OPTIONS_LIMIT = 10;
@@ -299,7 +301,7 @@ function Submission() {
 
   var approved_images = [];
 
-  async function addVarient(e) {
+  async function _addVarient(e) {
     e.preventDefault();
 
     const findEmptyDocID = inputList.find((item) => item?.docId == "");
@@ -405,6 +407,8 @@ function Submission() {
     await getApprovedStatus();
 
     const sendData = async () => {
+      setIsLoading(true)
+
       const approved_status = await approved_images;
       const payload = {
         force_replace: checkbox[1],
@@ -461,10 +465,13 @@ function Submission() {
         // toast(response.data.data)
         toast("someThing going Wrong");
       }
+      setIsLoading(false)
+
     };
 
     sendData();
   }
+  const addVarient=throttle(_addVarient,2000)
   useEffect(() => {
     async function getUsers() {
       await axios
@@ -477,7 +484,7 @@ function Submission() {
     }
 
     getUsers();
-  }, [page, session?.user?.id]);
+  }, []);
 
   const total1 = users.filter((item) =>
     item.agentId == session?.user?.id ? item : 0
@@ -560,6 +567,7 @@ function Submission() {
         setSuggestions(response.data.data);
       });
   };
+  
 
   return (
     <>
@@ -1302,6 +1310,8 @@ function Submission() {
                               color="info"
                               type="button"
                               onClick={addVarient}
+                              disabled={isLoading}
+                              
                             >
                               Submit
                             </Button>

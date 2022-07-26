@@ -1,8 +1,6 @@
-
-
-import Message from "../../../../schema/AddMessage";
+import Message from '../../../../schema/AddMessage';
 // import dbConnect from "../../../utils/dbConnect";
-import dbConnect from "../../../../utils/DBconnect"
+import dbConnect from '../../../../utils/DBconnect';
 
 const db=dbConnect()
 

@@ -82,7 +82,7 @@ function UserData() {
         //   user.status=false;
         // })
 
-        console.log(allusers)
+        
 
         setData2(allusers);
         setServerPage(response.data.totalPages);
@@ -93,12 +93,13 @@ function UserData() {
    await getData();
   }, []);
 
-  console.log(data2)
+ 
  
  
 
   const test2=data2.map((test)=>test)
-  // console.log(test2)
+  
+  
   
   // const left_target=data2.m
 
@@ -123,7 +124,7 @@ function UserData() {
 
 
 
-  // console.log(users)
+ 
 
   const loadNextPage = async () => {
 
@@ -171,9 +172,9 @@ function HandleActivate(userID){
 
     users.map((user)=>{
       if(user?._id==userID){
-        console.log({user,userID})
+        
         axios.patch(`/api/user`,{isActive :!user.status,id:user?._id}).then((response) => {
-          console.log(response)
+          
         })
           user.status = !user.status;
       }
@@ -240,8 +241,8 @@ function HandleActivate(userID){
             <h1>Loading</h1>
           ) : (
             users?.map((user,index) => {
-              // console.log(user?._id)
-              console.log(user._id)
+             
+            
 
               let test=data2.filter((item)=>{
                if( item.agentId==user._id ){

@@ -21,6 +21,7 @@
     "json-and-xlsx": "^2.1.2",
     "json-as-xlsx": "^2.4.1",
     "json2xls": "^0.1.2",
+    "lodash": "^4.17.21",
     "moment": "^2.29.3",
     "mongoose": "^6.2.10",
     "multer": "^1.4.4",

@@ -95,7 +95,7 @@ function CreatedData(props) {
   const loadNextPage = async () => {
     await axios
       .get(
-        `/api/admin/agency/v1statusReport?page=${page}&fromDate=${fromDate}&toDate=${toDate}`
+        `/api/admin/agency/v1statusReport?page=${page+1}&fromDate=${fromDate}&toDate=${toDate}`
       )
       .then((response) => {
         setUsers((prevData) => [...prevData, ...response.data.data]);

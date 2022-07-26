@@ -92,7 +92,7 @@ function TaskList() {
 
 
 
-  console.log(users);
+  
 
   const loadNextPage = async () => {
 
@@ -106,7 +106,8 @@ function TaskList() {
 
   const deleteuser = (id) => {
     axios.delete(`/api/user/delete/${id}`).then((response) => {
-      console.log(response);
+      
+      
       
     });
   };
@@ -137,7 +138,7 @@ function TaskList() {
             <h1>Loading</h1>
           ) : (
             users?.map((user) => {
-              console.log(user.isSuperAdmin);
+              
             
               return (
                 <Card key={user._id}>
@@ -202,7 +203,8 @@ function TaskList() {
              );
             })
           )}
-{console.log(showTaskModel)}
+
+
 
           <div style={{display:showTaskModel? "flex":"none",alignItems:"center" ,background:"rgba(0,0,0,0.3)", justifyContent:"center" , minHeight:"100vh" , width:"100vw",position:"fixed",top:0,left:0 }}> 
           <div style={{background:"white" ,minWidth:"400px",minHeight:300 , display:"flex" , flexDirection:"column" , alignItems:"stretch" ,justifyContent:"center",borderRadius:20,padding:20}} >

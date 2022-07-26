@@ -23,10 +23,13 @@ export default async function handler (req, res) {
 
   switch (method) {
     case 'GET':
+      const {page=1,limit=500,toDate,fromDate } = query;
       try {
         const agentId = query?.agentId;
         const date=query?.date
+      
         const products = await (await Product.find({agentId:agentId}))
+        // const products = await (await Product.find({},{agentId:1}))
         res.status(200).json({ success: true, data:products })
       } catch (error) {
         res.status(400).json({ success: false }) 
@@ -44,7 +47,7 @@ export default async function handler (req, res) {
       const {isActive} = body;
       const {id} = body;
       
-      console.log("id"+id)
+      
 
       if(!id) {
         res.status(400).json({ success: false,message:"id is required" })

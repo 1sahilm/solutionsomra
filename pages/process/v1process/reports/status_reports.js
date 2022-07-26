@@ -105,24 +105,34 @@ function StatusData() {
       searchDocuments(fromDate, toDate);
     }
   }, [fromDate, toDate]);
+  
+
+ 
+
+ 
 
   const loadNextPage = async () => {
+   
+    
+
     await axios
       .get(
-        `/api/admin/agency/v1statusReport?page=${page}&fromDate=${fromDate}&toDate=${toDate}`
+        `/api/admin/agency/v1statusReport?page=${page+1}&fromDate=${fromDate}&toDate=${toDate}`
       )
       .then((response) => {
         setUsers((prevData) => [...prevData, ...response.data.data]);
         setServerPage(response.data.totalPages);
         setPage(page + 1);
+        
       });
   };
+  
   const deleteuser = (id) => {
     axios.delete(`/api/user/delete/${id}`).then((response) => {
       router.reload();
     });
   };
-  console.log(count)
+  
 
   //DAte ===============Start=============Current date============
 

@@ -6,6 +6,7 @@ import Admin from '../../../schema/admin';
 import dbConnect from '../../../utils/DBconnect';
 
 dbConnect();
+// eslint-disable-next-line import/no-anonymous-default-export
 export default (req, res) => {
   NextAuth(req, res, {
     providers: [
@@ -25,7 +26,7 @@ export default (req, res) => {
             throw new Error("Email or Password is incorrect");
           }
 
-          console.log(user);
+          
           let payload = {
             task: user?.task,
             name: user?.name,
